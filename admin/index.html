@@ -1,0 +1,1399 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="FoodieMenu Admin Dashboard - Quản trị thực đơn nhà hàng by KzX Corp" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>FoodieMenu Admin 🛡️ — KzX Corp Dashboard</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../css/style.css" />
+
+    <style>
+      :root {
+        --brand:           #ff6b35;
+        --brand-dark:      #e8521c;
+        --brand-light:     #ff8f5e;
+        --brand-muted:     rgba(255,107,53,0.12);
+        --accent:          #ffd166;
+        --accent2:         #06d6a0;
+        --danger:          #ef4444;
+        --warning:         #f59e0b;
+        --info:            #3b82f6;
+        --success:         #10b981;
+        --sidebar-w:       260px;
+        --sidebar-w-col:   72px;
+        --header-h:        66px;
+        --bg-page:         #f0f2f8;
+        --text-primary:    #111827;
+        --text-secondary:  #6b7280;
+        --text-muted:      #9ca3af;
+        --border:          rgba(0,0,0,0.07);
+        --shadow-xs:       0 1px 3px rgba(0,0,0,0.06);
+        --shadow-sm:       0 4px 12px rgba(0,0,0,0.08);
+        --shadow-md:       0 8px 28px rgba(0,0,0,0.12);
+        --shadow-lg:       0 16px 48px rgba(0,0,0,0.16);
+        --shadow-xl:       0 24px 64px rgba(0,0,0,0.22);
+        --shadow-brand:    0 8px 28px rgba(255,107,53,0.38);
+        --radius-sm:       8px;
+        --radius-md:       14px;
+        --radius-lg:       20px;
+        --radius-xl:       28px;
+        --radius-pill:     9999px;
+        --grad-brand:      linear-gradient(135deg,#ff6b35 0%,#ff8f5e 50%,#ffd166 100%);
+        --grad-danger:     linear-gradient(135deg,#ef4444,#f87171);
+        --grad-success:    linear-gradient(135deg,#10b981,#34d399);
+        --grad-info:       linear-gradient(135deg,#3b82f6,#60a5fa);
+        --grad-warning:    linear-gradient(135deg,#f59e0b,#fbbf24);
+        --trans-base:      250ms ease;
+        --trans-bounce:    350ms cubic-bezier(0.34,1.56,0.64,1);
+        --font-main:       'Be Vietnam Pro', sans-serif;
+        --font-display:    'Playfair Display', serif;
+        --font-mono:       'JetBrains Mono', monospace;
+      }
+
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+      html { font-size: 16px; scroll-behavior: smooth; }
+      body {
+        font-family: var(--font-main);
+        background: var(--bg-page);
+        color: var(--text-primary);
+        overflow-x: hidden;
+        -webkit-font-smoothing: antialiased;
+        min-height: 100vh;
+      }
+      ::selection { background: var(--brand); color: white; }
+      img { max-width: 100%; display: block; }
+      a { text-decoration: none; transition: var(--trans-base); }
+
+      /* PAGE BACKGROUND */
+      .page-bg {
+        position: fixed; inset: 0; z-index: 0;
+        background-image: url('https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=1920&q=80&auto=format&fit=crop');
+        background-size: cover; background-position: center;
+        animation: bgZoom 30s ease-in-out infinite alternate;
+        filter: brightness(0.3) saturate(0.7);
+        pointer-events: none;
+      }
+      @keyframes bgZoom {
+        0%   { transform: scale(1);    background-position: center center; }
+        100% { transform: scale(1.08); background-position: center 30%; }
+      }
+      .page-bg-overlay {
+        position: fixed; inset: 0; z-index: 0;
+        background: linear-gradient(135deg,rgba(13,17,23,0.85) 0%,rgba(17,24,39,0.78) 50%,rgba(255,107,53,0.06) 100%);
+        pointer-events: none;
+      }
+
+      /* LAYOUT */
+      .adm-wrapper { display: flex; min-height: 100vh; position: relative; z-index: 1; }
+
+      /* SIDEBAR */
+      .adm-sidebar {
+        width: var(--sidebar-w); min-width: var(--sidebar-w);
+        background: rgba(13,17,23,0.94);
+        backdrop-filter: blur(24px) saturate(1.4);
+        -webkit-backdrop-filter: blur(24px) saturate(1.4);
+        border-right: 1px solid rgba(255,255,255,0.06);
+        display: flex; flex-direction: column;
+        position: fixed; top: 0; left: 0; height: 100vh;
+        z-index: 1100; overflow-y: auto; overflow-x: hidden;
+        transition: width var(--trans-base), min-width var(--trans-base), transform var(--trans-base);
+        scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.06) transparent;
+        box-shadow: 4px 0 40px rgba(0,0,0,0.4);
+      }
+      .adm-sidebar::-webkit-scrollbar { width: 4px; }
+      .adm-sidebar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 4px; }
+
+      .adm-sidebar.collapsed { width: var(--sidebar-w-col); min-width: var(--sidebar-w-col); }
+      .adm-sidebar.collapsed .sb-label,
+      .adm-sidebar.collapsed .sb-brand-text,
+      .adm-sidebar.collapsed .sb-section-title,
+      .adm-sidebar.collapsed .sb-badge,
+      .adm-sidebar.collapsed .sb-footer-text,
+      .adm-sidebar.collapsed #sidebarDishCount {
+        opacity: 0; width: 0; overflow: hidden; pointer-events: none;
+      }
+      .adm-sidebar.collapsed .sb-nav-link { justify-content: center; padding: 0.7rem; }
+      .adm-sidebar.collapsed .sb-nav-link .sb-icon { margin: 0; }
+
+      .sb-brand {
+        display: flex; align-items: center; gap: 0.75rem;
+        padding: 1.25rem 1.25rem 1rem;
+        border-bottom: 1px solid rgba(255,255,255,0.06);
+        text-decoration: none; flex-shrink: 0;
+        min-height: var(--header-h); overflow: hidden;
+      }
+      .sb-brand-icon {
+        width: 42px; height: 42px; border-radius: 13px;
+        background: var(--grad-brand);
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1.2rem; flex-shrink: 0;
+        box-shadow: var(--shadow-brand); transition: var(--trans-bounce);
+      }
+      .sb-brand:hover .sb-brand-icon { transform: rotate(-8deg) scale(1.08); }
+      .sb-brand-text { display: flex; flex-direction: column; overflow: hidden; white-space: nowrap; }
+      .sb-brand-name {
+        font-family: var(--font-display); font-size: 1.05rem; font-weight: 800;
+        color: white; line-height: 1.1; letter-spacing: -0.01em;
+      }
+      .sb-brand-name span {
+        background: var(--grad-brand);
+        -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+      }
+      .sb-brand-badge {
+        display: inline-flex; align-items: center; gap: 4px;
+        background: rgba(255,107,53,0.18); border: 1px solid rgba(255,107,53,0.3);
+        color: var(--brand-light); font-size: 0.58rem; font-weight: 700;
+        padding: 1px 7px; border-radius: var(--radius-pill);
+        text-transform: uppercase; letter-spacing: 0.1em; margin-top: 3px;
+      }
+
+      .sb-nav { flex: 1; padding: 0.75rem 0; overflow-y: auto; overflow-x: hidden; }
+      .sb-section-title {
+        font-size: 0.62rem; font-weight: 800; text-transform: uppercase;
+        letter-spacing: 0.14em; color: rgba(255,255,255,0.25);
+        padding: 1.1rem 1.25rem 0.35rem; white-space: nowrap; overflow: hidden;
+      }
+      .sb-nav-item { padding: 0 0.6rem; margin-bottom: 2px; }
+      .sb-nav-link {
+        display: flex; align-items: center; gap: 0.75rem;
+        padding: 0.65rem 0.85rem; border-radius: var(--radius-md);
+        color: rgba(255,255,255,0.6); font-size: 0.875rem; font-weight: 500;
+        text-decoration: none; white-space: nowrap; overflow: hidden;
+        position: relative; cursor: pointer; transition: var(--trans-base);
+      }
+      .sb-nav-link .sb-icon {
+        font-size: 1.05rem; flex-shrink: 0; width: 22px;
+        text-align: center; transition: var(--trans-bounce);
+      }
+      .sb-nav-link:hover { background: rgba(255,255,255,0.07); color: white; }
+      .sb-nav-link:hover .sb-icon { transform: scale(1.18) rotate(-4deg); color: var(--brand-light); }
+      .sb-nav-link.active {
+        background: rgba(255,107,53,0.16); color: white; font-weight: 600;
+        border-left: 3px solid var(--brand);
+      }
+      .sb-nav-link.active .sb-icon { color: var(--brand-light); }
+
+      #sidebarDishCount {
+        margin-left: auto;
+        background: rgba(255,107,53,0.25); color: var(--brand-light);
+        font-size: 0.62rem; font-weight: 800; padding: 2px 8px;
+        border-radius: var(--radius-pill); flex-shrink: 0;
+        transition: var(--trans-base); white-space: nowrap; overflow: hidden;
+      }
+
+      .sb-footer {
+        padding: 1rem 1.25rem; border-top: 1px solid rgba(255,255,255,0.06);
+        flex-shrink: 0; overflow: hidden;
+      }
+      .sb-footer-text { font-size: 0.72rem; color: rgba(255,255,255,0.25); white-space: nowrap; }
+      .sb-footer-text strong { color: rgba(255,107,53,0.7); }
+
+      /* MAIN */
+      .adm-main {
+        flex: 1; min-width: 0; margin-left: var(--sidebar-w);
+        display: flex; flex-direction: column;
+        transition: margin-left var(--trans-base); min-height: 100vh;
+      }
+      .adm-main.sidebar-collapsed { margin-left: var(--sidebar-w-col); }
+
+      /* HEADER */
+      .adm-header {
+        position: sticky; top: 0; z-index: 1050;
+        height: var(--header-h);
+        background: rgba(15,17,26,0.85);
+        backdrop-filter: blur(24px) saturate(1.5);
+        -webkit-backdrop-filter: blur(24px) saturate(1.5);
+        border-bottom: 1px solid rgba(255,255,255,0.07);
+        display: flex; align-items: center; justify-content: space-between;
+        gap: 1rem; padding: 0 1.5rem;
+        box-shadow: 0 4px 24px rgba(0,0,0,0.25);
+      }
+      .header-left { display: flex; align-items: center; gap: 0.85rem; min-width: 0; }
+      .sb-toggle-btn {
+        width: 38px; height: 38px; border-radius: var(--radius-md);
+        background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.09);
+        color: rgba(255,255,255,0.7);
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1.1rem; cursor: pointer; transition: var(--trans-bounce); flex-shrink: 0;
+      }
+      .sb-toggle-btn:hover { background: rgba(255,107,53,0.15); border-color: rgba(255,107,53,0.3); color: var(--brand-light); transform: scale(1.06); }
+
+      .adm-breadcrumb {
+        display: flex; align-items: center; gap: 0.4rem;
+        font-size: 0.82rem; color: rgba(255,255,255,0.45); overflow: hidden;
+      }
+      .adm-breadcrumb a { color: rgba(255,255,255,0.45); white-space: nowrap; }
+      .adm-breadcrumb a:hover { color: var(--brand-light); }
+      .adm-breadcrumb .bc-sep { opacity: 0.35; }
+      .adm-breadcrumb .bc-current { color: rgba(255,255,255,0.85); font-weight: 600; white-space: nowrap; }
+
+      .header-right { display: flex; align-items: center; gap: 0.75rem; flex-shrink: 0; }
+      .header-clock { display: flex; flex-direction: column; align-items: flex-end; line-height: 1.1; }
+      .clock-time { font-family: var(--font-mono); font-size: 1rem; font-weight: 600; color: white; letter-spacing: 0.04em; }
+      .clock-date { font-size: 0.68rem; color: rgba(255,255,255,0.4); font-weight: 500; white-space: nowrap; }
+
+      .header-api-status {
+        display: flex; align-items: center; gap: 0.4rem;
+        background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08);
+        border-radius: var(--radius-pill); padding: 0.3rem 0.75rem;
+        font-size: 0.72rem; font-weight: 600; color: rgba(255,255,255,0.55);
+      }
+      #apiStatusDot { width: 7px; height: 7px; border-radius: 50%; background: #9ca3af; flex-shrink: 0; transition: background var(--trans-base); }
+      #apiStatusText { white-space: nowrap; }
+
+      .btn-header-home {
+        display: inline-flex; align-items: center; gap: 0.4rem;
+        background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.1);
+        border-radius: var(--radius-md); color: rgba(255,255,255,0.7);
+        font-size: 0.8rem; font-weight: 600; padding: 0.45rem 0.9rem;
+        transition: var(--trans-bounce); white-space: nowrap;
+      }
+      .btn-header-home:hover { background: rgba(255,107,53,0.15); border-color: rgba(255,107,53,0.3); color: var(--brand-light); transform: translateY(-1px); }
+
+      .header-avatar {
+        width: 38px; height: 38px; border-radius: 50%;
+        background: var(--grad-brand);
+        display: flex; align-items: center; justify-content: center;
+        color: white; font-weight: 800; font-size: 0.9rem; flex-shrink: 0;
+        box-shadow: 0 4px 14px rgba(255,107,53,0.35); cursor: pointer;
+        transition: var(--trans-bounce); border: 2px solid rgba(255,107,53,0.4); position: relative;
+      }
+      .header-avatar:hover { transform: scale(1.08); box-shadow: var(--shadow-brand); }
+      .avatar-online {
+        position: absolute; bottom: 1px; right: 1px; width: 9px; height: 9px;
+        background: var(--accent2); border-radius: 50%; border: 2px solid #0f1117;
+      }
+
+      /* CONTENT */
+      .adm-content { flex: 1; padding: 1.75rem; display: flex; flex-direction: column; gap: 1.5rem; }
+
+      /* STAT CARDS */
+      .stat-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 1.25rem; }
+      .stat-card {
+        border-radius: var(--radius-lg); padding: 1.5rem 1.6rem;
+        display: flex; align-items: center; gap: 1.1rem;
+        position: relative; overflow: hidden;
+        transition: var(--trans-bounce); cursor: default;
+        box-shadow: var(--shadow-md); border: 1px solid rgba(255,255,255,0.15);
+      }
+      .stat-card::before {
+        content: ''; position: absolute; top: -40px; right: -30px;
+        width: 120px; height: 120px; border-radius: 50%;
+        background: rgba(255,255,255,0.08); transition: var(--trans-base);
+      }
+      .stat-card::after {
+        content: ''; position: absolute; bottom: -50px; right: 20px;
+        width: 90px; height: 90px; border-radius: 50%; background: rgba(255,255,255,0.05);
+      }
+      .stat-card:hover { transform: translateY(-5px) scale(1.02); box-shadow: var(--shadow-xl); }
+      .stat-card-brand   { background: var(--grad-brand); }
+      .stat-card-success { background: var(--grad-success); }
+      .stat-card-danger  { background: var(--grad-danger); }
+      .stat-card-info    { background: var(--grad-info); }
+      .stat-icon-wrap {
+        width: 52px; height: 52px; border-radius: var(--radius-md);
+        background: rgba(255,255,255,0.2);
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1.45rem; flex-shrink: 0; position: relative; z-index: 1;
+        transition: var(--trans-bounce);
+      }
+      .stat-card:hover .stat-icon-wrap { transform: rotate(-8deg) scale(1.12); }
+      .stat-info { position: relative; z-index: 1; }
+      .stat-value {
+        font-size: 2rem; font-weight: 900; color: white; line-height: 1;
+        letter-spacing: -0.03em; font-family: var(--font-display);
+      }
+      .stat-label {
+        font-size: 0.72rem; font-weight: 700; color: rgba(255,255,255,0.75);
+        text-transform: uppercase; letter-spacing: 0.08em; margin-top: 4px;
+      }
+
+      /* TABLE GLASS */
+      .table-glass {
+        background: rgba(255,255,255,0.93);
+        backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(255,255,255,0.65);
+        border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-lg);
+      }
+      .table-toolbar {
+        display: flex; align-items: center; justify-content: space-between;
+        gap: 1rem; padding: 1.1rem 1.25rem;
+        border-bottom: 1px solid rgba(0,0,0,0.06);
+        flex-wrap: wrap; background: rgba(255,255,255,0.65);
+      }
+      .toolbar-left { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; flex: 1; min-width: 0; }
+      .toolbar-title {
+        font-size: 0.95rem; font-weight: 800; color: var(--text-primary);
+        display: flex; align-items: center; gap: 0.5rem; white-space: nowrap; flex-shrink: 0;
+      }
+      .toolbar-title i { color: var(--brand); font-size: 1rem; }
+
+      .search-wrap { position: relative; flex: 1; min-width: 160px; max-width: 300px; }
+      .search-wrap .search-icon-i {
+        position: absolute; left: 0.85rem; top: 50%; transform: translateY(-50%);
+        color: var(--text-muted); font-size: 0.85rem; pointer-events: none; transition: var(--trans-base);
+      }
+      #tableSearch {
+        width: 100%; padding: 0.5rem 0.75rem 0.5rem 2.25rem;
+        border-radius: var(--radius-pill); border: 1.5px solid #e5e7eb;
+        background: white; font-family: var(--font-main); font-size: 0.82rem;
+        font-weight: 500; color: var(--text-primary); outline: none;
+        transition: var(--trans-base); box-shadow: var(--shadow-xs);
+      }
+      #tableSearch:focus { border-color: var(--brand); box-shadow: 0 0 0 3px rgba(255,107,53,0.12); }
+      .search-wrap:focus-within .search-icon-i { color: var(--brand); }
+
+      .filter-select {
+        padding: 0.48rem 2rem 0.48rem 0.85rem;
+        border-radius: var(--radius-pill); border: 1.5px solid #e5e7eb;
+        background: white; font-family: var(--font-main); font-size: 0.82rem;
+        font-weight: 600; color: var(--text-secondary); cursor: pointer; outline: none;
+        transition: var(--trans-base); box-shadow: var(--shadow-xs);
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+        background-repeat: no-repeat; background-position: right 0.7rem center; min-width: 130px;
+      }
+      #tableStatusFilter:focus, #tableCategoryFilter:focus {
+        border-color: var(--brand); box-shadow: 0 0 0 3px rgba(255,107,53,0.12); color: var(--text-primary);
+      }
+
+      #btnAddDish {
+        display: inline-flex; align-items: center; gap: 0.5rem;
+        background: var(--grad-brand); color: white; border: none;
+        border-radius: var(--radius-pill); padding: 0.55rem 1.3rem;
+        font-family: var(--font-main); font-size: 0.85rem; font-weight: 700;
+        cursor: pointer; box-shadow: 0 4px 16px rgba(255,107,53,0.35);
+        transition: var(--trans-bounce); white-space: nowrap; flex-shrink: 0;
+      }
+      #btnAddDish:hover { transform: translateY(-2px) scale(1.04); box-shadow: var(--shadow-brand); }
+      #btnAddDish:active { transform: scale(0.97); }
+
+      /* TABLE */
+      .table-responsive-wrap { overflow-x: auto; }
+      #dishTable { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 0.875rem; margin: 0; }
+      #dishTable thead th {
+        background: #f8fafc; color: var(--text-muted); font-size: 0.7rem; font-weight: 800;
+        text-transform: uppercase; letter-spacing: 0.09em; padding: 0.85rem 1.1rem;
+        border-bottom: 2px solid #e5e7eb; white-space: nowrap; vertical-align: middle;
+        position: sticky; top: 0; z-index: 5;
+      }
+      #dishTable tbody td {
+        padding: 0.9rem 1.1rem; vertical-align: middle;
+        border-bottom: 1px solid #f3f4f6; color: var(--text-primary);
+        transition: background 150ms ease;
+      }
+      #dishTable tbody tr { transition: background 150ms ease; }
+      #dishTable tbody tr:last-child td { border-bottom: none; }
+      #dishTable tbody tr:hover td { background: #fef9f7; }
+      #dishTable tbody tr:nth-child(even) td { background: #fafbfc; }
+      #dishTable tbody tr:nth-child(even):hover td { background: #fef9f7; }
+
+      #dishTable thead [data-sort] {
+        display: inline-flex; align-items: center; gap: 4px;
+        background: none; border: none; color: var(--text-muted); font-size: 0.7rem;
+        font-weight: 800; text-transform: uppercase; letter-spacing: 0.09em;
+        cursor: pointer; padding: 0; transition: color 150ms ease; white-space: nowrap;
+      }
+      #dishTable thead [data-sort]:hover { color: var(--brand); }
+
+      .dish-thumb {
+        width: 52px; height: 52px; border-radius: var(--radius-md); object-fit: cover;
+        border: 2px solid #e5e7eb; background: #f3f4f6; display: block;
+        transition: var(--trans-bounce); box-shadow: var(--shadow-xs);
+      }
+      #dishTable tbody tr:hover .dish-thumb { transform: scale(1.08); box-shadow: var(--shadow-sm); border-color: var(--brand); }
+
+      .id-cell {
+        font-family: var(--font-mono); font-size: 0.7rem; color: var(--text-muted);
+        background: #f3f4f6; border-radius: 6px; padding: 2px 7px; display: inline-block;
+        max-width: 70px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; cursor: help;
+      }
+      .dish-name-cell { font-weight: 700; color: var(--text-primary); max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+      .dish-sub-text { font-size: 0.72rem; color: var(--text-muted); margin-top: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 180px; }
+      .cat-badge {
+        display: inline-flex; align-items: center;
+        background: rgba(255,107,53,0.09); color: var(--brand);
+        font-size: 0.7rem; font-weight: 700; padding: 3px 10px;
+        border-radius: var(--radius-pill); text-transform: uppercase; letter-spacing: 0.05em; white-space: nowrap;
+      }
+      .status-badge {
+        display: inline-flex; align-items: center; gap: 5px;
+        padding: 4px 11px; border-radius: var(--radius-pill);
+        font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; white-space: nowrap;
+      }
+      .status-badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
+      .status-badge.available { background: rgba(16,185,129,0.1); color: #065f46; }
+      .status-badge.soldout   { background: rgba(239,68,68,0.1); color: #991b1b; }
+
+      .action-btn {
+        width: 33px; height: 33px; border-radius: var(--radius-sm);
+        border: 1.5px solid transparent; background: transparent; cursor: pointer;
+        display: inline-flex; align-items: center; justify-content: center;
+        font-size: 0.85rem; transition: var(--trans-bounce); flex-shrink: 0;
+      }
+      .action-btn:hover { transform: scale(1.12); }
+      .action-btn-edit   { color: var(--info);   border-color: rgba(59,130,246,0.25); }
+      .action-btn-edit:hover   { background: rgba(59,130,246,0.1); border-color: var(--info); }
+      .action-btn-delete { color: var(--danger); border-color: rgba(239,68,68,0.25); }
+      .action-btn-delete:hover { background: rgba(239,68,68,0.1); border-color: var(--danger); }
+
+      .table-footer-bar {
+        display: flex; align-items: center; justify-content: space-between;
+        gap: 1rem; padding: 0.75rem 1.25rem; border-top: 1px solid #f3f4f6;
+        background: #fafbfc; flex-wrap: wrap;
+        border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+      }
+      #tableInfo { font-size: 0.78rem; color: var(--text-muted); font-weight: 500; }
+      .rows-wrap { display: flex; align-items: center; gap: 0.5rem; font-size: 0.78rem; color: var(--text-muted); }
+      #rowsPerPage {
+        border: 1.5px solid #e5e7eb; border-radius: var(--radius-sm);
+        background: white; font-family: var(--font-main); font-size: 0.78rem;
+        font-weight: 600; color: var(--text-primary);
+        padding: 0.25rem 1.5rem 0.25rem 0.5rem; cursor: pointer; outline: none;
+        transition: var(--trans-base); appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+        background-repeat: no-repeat; background-position: right 0.4rem center;
+      }
+      #rowsPerPage:focus { border-color: var(--brand); box-shadow: 0 0 0 3px rgba(255,107,53,0.1); }
+
+      .table-skeleton-row td { padding: 0.9rem 1.1rem; border-bottom: 1px solid #f3f4f6; }
+      .table-empty-state { text-align: center; padding: 3.5rem 1rem; color: var(--text-muted); }
+      .table-empty-icon { font-size: 3rem; opacity: 0.25; display: block; margin-bottom: 0.75rem; animation: wobble 3s ease-in-out infinite; }
+      @keyframes wobble { 0%,100% { transform: rotate(-4deg); } 50% { transform: rotate(4deg); } }
+
+      /* MODAL FORM */
+      #dishFormModal .modal-dialog { max-width: 680px; }
+      #dishFormModal .modal-content {
+        border: none; border-radius: var(--radius-xl); overflow: hidden;
+        box-shadow: var(--shadow-xl); background: rgba(255,255,255,0.97);
+        backdrop-filter: blur(30px);
+      }
+      #dishFormModal .modal-header {
+        background: var(--grad-brand); border: none; padding: 1.25rem 1.75rem;
+        position: relative; overflow: hidden;
+      }
+      #dishFormModal .modal-header::before {
+        content: ''; position: absolute; top: -60px; right: -60px;
+        width: 200px; height: 200px;
+        background: radial-gradient(circle,rgba(255,255,255,0.15),transparent 70%); pointer-events: none;
+      }
+      #dishFormModal .modal-title {
+        color: white; font-family: var(--font-display); font-weight: 800;
+        font-size: 1.1rem; display: flex; align-items: center; gap: 0.6rem;
+      }
+      #dishFormModal .btn-close { filter: brightness(0) invert(1); opacity: 0.8; transition: var(--trans-bounce); }
+      #dishFormModal .btn-close:hover { opacity: 1; transform: rotate(90deg) scale(1.1); }
+      #dishFormModal .modal-body { padding: 2rem; }
+
+      .form-section-title {
+        font-size: 0.68rem; font-weight: 800; text-transform: uppercase;
+        letter-spacing: 0.1em; color: var(--text-muted);
+        border-bottom: 2px solid #f3f4f6; padding-bottom: 0.5rem; margin-bottom: 1rem;
+        display: flex; align-items: center; gap: 0.4rem;
+      }
+      .form-label { font-size: 0.82rem; font-weight: 700; color: var(--text-secondary); margin-bottom: 0.4rem; display: block; }
+      .required-mark { color: var(--danger); margin-left: 2px; }
+
+      .form-control, .form-select {
+        font-family: var(--font-main); font-size: 0.875rem; font-weight: 500;
+        color: var(--text-primary); border: 1.5px solid #e5e7eb;
+        border-radius: var(--radius-md); padding: 0.6rem 0.9rem;
+        background: white; transition: var(--trans-base); outline: none;
+        width: 100%; box-shadow: var(--shadow-xs);
+      }
+      .form-control:focus, .form-select:focus {
+        border-color: var(--brand); box-shadow: 0 0 0 4px rgba(255,107,53,0.12); background: white;
+      }
+      textarea.form-control { resize: vertical; min-height: 90px; }
+      .input-group .form-control { border-radius: 0 var(--radius-md) var(--radius-md) 0; }
+      .input-group .input-group-text {
+        border: 1.5px solid #e5e7eb; border-right: none;
+        border-radius: var(--radius-md) 0 0 var(--radius-md);
+        background: #f8fafc; color: var(--text-muted); font-size: 0.9rem;
+        padding: 0.6rem 0.85rem; transition: var(--trans-base);
+      }
+      .input-group:focus-within .input-group-text { border-color: var(--brand); }
+
+      .field-invalid { border-color: var(--danger) !important; box-shadow: 0 0 0 4px rgba(239,68,68,0.1) !important; }
+      .field-valid   { border-color: var(--success) !important; }
+      .field-error {
+        font-size: 0.75rem; color: var(--danger); margin-top: 0.3rem;
+        display: none; align-items: center; gap: 0.25rem; font-weight: 600;
+      }
+      .field-error.visible { display: flex; }
+      #pricePreview { font-size: 0.78rem; font-weight: 700; color: var(--success); display: block; margin-top: 3px; }
+      #nameCharCount, #descCharCount { font-size: 0.7rem; color: var(--text-muted); display: block; text-align: right; margin-top: 2px; }
+
+      #imagePreviewWrap { display: none; margin-top: 0.75rem; border-radius: var(--radius-md); overflow: hidden; border: 1.5px solid #e5e7eb; box-shadow: var(--shadow-sm); }
+      #imagePreviewWrap img { width: 100%; height: 140px; object-fit: cover; display: block; }
+
+      .toggle-status-wrap {
+        display: flex; align-items: center; justify-content: space-between;
+        background: #f8fafc; border: 1.5px solid #e5e7eb;
+        border-radius: var(--radius-md); padding: 0.85rem 1rem; transition: var(--trans-base);
+      }
+      .toggle-status-wrap:focus-within { border-color: var(--brand); box-shadow: 0 0 0 4px rgba(255,107,53,0.08); }
+      .toggle-label-group { display: flex; flex-direction: column; gap: 2px; }
+      .toggle-title { font-size: 0.875rem; font-weight: 700; color: var(--text-primary); }
+      #statusDescription { font-size: 0.75rem; color: var(--text-muted); font-weight: 500; }
+      .form-switch .form-check-input { width: 2.75rem; height: 1.45rem; cursor: pointer; border: none; box-shadow: none; }
+      .form-switch .form-check-input:checked { background-color: var(--success); border-color: var(--success); }
+      #statusToggleLabel { font-size: 0.8rem; font-weight: 700; cursor: pointer; margin-left: 0.5rem; }
+
+      #previewImageBtn {
+        border-radius: 0 var(--radius-md) var(--radius-md) 0;
+        border: 1.5px solid #e5e7eb; border-left: none;
+        background: #f8fafc; color: var(--text-muted); padding: 0.6rem 0.85rem;
+        cursor: pointer; transition: var(--trans-base); font-size: 0.875rem;
+      }
+      #previewImageBtn:hover { background: var(--brand-muted); color: var(--brand); border-color: var(--brand); }
+
+      #dishFormModal .modal-footer {
+        padding: 1rem 1.75rem; border-top: 1px solid #f3f4f6;
+        background: #fafbfc; gap: 0.6rem; border-radius: 0 0 var(--radius-xl) var(--radius-xl);
+      }
+      #cancelFormBtn {
+        display: inline-flex; align-items: center; gap: 0.4rem;
+        background: white; color: var(--text-secondary); border: 1.5px solid #e5e7eb;
+        border-radius: var(--radius-pill); padding: 0.55rem 1.2rem;
+        font-family: var(--font-main); font-size: 0.85rem; font-weight: 600; cursor: pointer;
+        transition: var(--trans-base);
+      }
+      #cancelFormBtn:hover { border-color: #9ca3af; background: #f9fafb; }
+      #submitFormBtn {
+        display: inline-flex; align-items: center; gap: 0.4rem;
+        background: var(--grad-brand); color: white; border: none;
+        border-radius: var(--radius-pill); padding: 0.58rem 1.5rem;
+        font-family: var(--font-main); font-size: 0.875rem; font-weight: 700;
+        cursor: pointer; box-shadow: 0 4px 16px rgba(255,107,53,0.35);
+        transition: var(--trans-bounce);
+      }
+      #submitFormBtn:hover { transform: translateY(-2px) scale(1.04); box-shadow: var(--shadow-brand); }
+      #submitFormBtn:active { transform: scale(0.97); }
+      #submitFormBtn:disabled { opacity: 0.65; cursor: not-allowed; transform: none; box-shadow: none; }
+      #modalCloseBtn { filter: brightness(0) invert(1); opacity: 0.8; transition: var(--trans-bounce); }
+      #modalCloseBtn:hover { opacity: 1; transform: rotate(90deg) scale(1.1); }
+      #formAlertContainer .alert { border-radius: var(--radius-md); border: none; font-size: 0.82rem; font-weight: 500; box-shadow: var(--shadow-xs); animation: slideDown 0.25s ease both; }
+      @keyframes slideDown { from { opacity: 0; transform: translateY(-12px); } to { opacity: 1; transform: translateY(0); } }
+
+      /* DELETE MODAL */
+      #deleteConfirmModal .modal-dialog { max-width: 420px; }
+      #deleteConfirmModal .modal-content {
+        border: none; border-radius: var(--radius-xl); overflow: hidden;
+        box-shadow: var(--shadow-xl); background: rgba(255,255,255,0.97);
+        backdrop-filter: blur(30px);
+      }
+      #deleteConfirmModal .modal-body { padding: 2.25rem 2rem; text-align: center; }
+      .delete-icon-wrap {
+        width: 70px; height: 70px; border-radius: 50%;
+        background: rgba(239,68,68,0.1);
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1.9rem; color: var(--danger);
+        margin: 0 auto 1.25rem; animation: pulseRed 2s ease-in-out infinite;
+        border: 2px solid rgba(239,68,68,0.2);
+      }
+      @keyframes pulseRed {
+        0%,100% { box-shadow: 0 0 0 0 rgba(239,68,68,0.25); }
+        50%      { box-shadow: 0 0 0 10px rgba(239,68,68,0); }
+      }
+      .delete-modal-title { font-family: var(--font-display); font-size: 1.15rem; font-weight: 800; color: var(--text-primary); margin-bottom: 0.5rem; }
+      #deleteDishName { font-weight: 800; color: var(--danger); font-size: 1rem; margin: 0.4rem 0 1.1rem; display: block; }
+      .delete-warning-box {
+        background: rgba(239,68,68,0.06); border: 1px solid rgba(239,68,68,0.18);
+        border-radius: var(--radius-md); padding: 0.75rem 1rem; margin-bottom: 1.5rem;
+        font-size: 0.8rem; color: #991b1b; font-weight: 600;
+        display: flex; align-items: center; gap: 0.5rem; text-align: left;
+      }
+      .delete-actions { display: flex; gap: 0.75rem; justify-content: center; }
+      .btn-cancel-delete {
+        display: inline-flex; align-items: center; gap: 0.4rem;
+        background: white; color: var(--text-secondary); border: 1.5px solid #e5e7eb;
+        border-radius: var(--radius-pill); padding: 0.62rem 1.4rem;
+        font-family: var(--font-main); font-size: 0.875rem; font-weight: 600;
+        cursor: pointer; transition: var(--trans-base); min-width: 110px; justify-content: center;
+      }
+      .btn-cancel-delete:hover { background: #f9fafb; border-color: #9ca3af; }
+      #confirmDeleteBtn {
+        display: inline-flex; align-items: center; gap: 0.4rem;
+        background: var(--grad-danger); color: white; border: none;
+        border-radius: var(--radius-pill); padding: 0.62rem 1.5rem;
+        font-family: var(--font-main); font-size: 0.875rem; font-weight: 700;
+        cursor: pointer; box-shadow: 0 4px 16px rgba(239,68,68,0.3);
+        transition: var(--trans-bounce); min-width: 130px; justify-content: center;
+      }
+      #confirmDeleteBtn:hover { transform: translateY(-2px) scale(1.04); box-shadow: 0 8px 24px rgba(239,68,68,0.4); }
+      #confirmDeleteBtn:disabled { opacity: 0.65; cursor: not-allowed; transform: none; }
+
+      /* ALERT CONTAINER */
+      #adminAlertContainer .alert { border-radius: var(--radius-md); border: none; font-size: 0.82rem; font-weight: 500; box-shadow: var(--shadow-xs); animation: slideDown 0.3s ease both; }
+
+      /* FOOTER */
+      .adm-footer {
+        background: rgba(13,17,23,0.9);
+        backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+        border-top: 1px solid rgba(255,255,255,0.06);
+        padding: 1.5rem 1.75rem; color: rgba(255,255,255,0.45);
+        font-size: 0.78rem; position: relative; z-index: 10;
+      }
+      .footer-inner { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; flex-wrap: wrap; }
+      .footer-brand { display: flex; align-items: center; gap: 0.6rem; }
+      .footer-brand-logo {
+        width: 32px; height: 32px; border-radius: 9px; background: var(--grad-brand);
+        display: flex; align-items: center; justify-content: center;
+        font-size: 0.9rem; flex-shrink: 0; box-shadow: 0 4px 12px rgba(255,107,53,0.3);
+      }
+      .footer-brand-info strong { display: block; color: rgba(255,255,255,0.75); font-weight: 700; font-size: 0.82rem; line-height: 1.1; }
+      .footer-brand-info span   { font-size: 0.68rem; color: rgba(255,255,255,0.3); }
+      .footer-center { text-align: center; }
+      .footer-contact { display: flex; flex-direction: column; gap: 0.2rem; font-size: 0.72rem; }
+      .footer-contact a { color: rgba(255,255,255,0.4); transition: color 150ms ease; display: inline-flex; align-items: center; gap: 0.35rem; }
+      .footer-contact a:hover { color: var(--brand-light); }
+      .footer-copy { font-size: 0.7rem; color: rgba(255,255,255,0.25); margin-top: 0.35rem; }
+      .footer-copy strong { color: rgba(255,107,53,0.6); }
+      .footer-social { display: flex; gap: 0.5rem; align-items: center; }
+      .footer-social-btn {
+        width: 32px; height: 32px; border-radius: 9px;
+        display: flex; align-items: center; justify-content: center; font-size: 0.85rem;
+        background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.08);
+        color: rgba(255,255,255,0.45); transition: var(--trans-bounce); flex-shrink: 0;
+      }
+      .footer-social-btn:hover { transform: translateY(-3px) scale(1.1); color: white; border-color: rgba(255,255,255,0.2); }
+      .footer-social-btn.fb:hover { background: #1877f2; }
+      .footer-social-btn.tt:hover { background: #010101; }
+      .footer-social-btn.ig:hover { background: linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888); border-color: transparent; }
+
+      /* FADE IN */
+      .fade-in-up { opacity: 0; transform: translateY(20px); animation: fadeInUp 0.5s ease forwards; }
+      .fade-in-up:nth-child(1) { animation-delay: 0.05s; }
+      .fade-in-up:nth-child(2) { animation-delay: 0.10s; }
+      .fade-in-up:nth-child(3) { animation-delay: 0.15s; }
+      .fade-in-up:nth-child(4) { animation-delay: 0.20s; }
+      @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
+
+      /* SIDEBAR OVERLAY (mobile) */
+      .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 1090; backdrop-filter: blur(2px); opacity: 0; transition: opacity var(--trans-base); }
+      .sidebar-overlay.show { display: block; opacity: 1; }
+
+      /* SCROLLBAR */
+      ::-webkit-scrollbar { width: 6px; height: 6px; }
+      ::-webkit-scrollbar-track { background: transparent; }
+      ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: 3px; }
+      ::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,0.25); }
+
+      /* RESPONSIVE */
+      @media (max-width: 1199.98px) { .stat-grid { grid-template-columns: repeat(2,1fr); } }
+      @media (max-width: 991.98px) {
+        .adm-sidebar { transform: translateX(-100%); position: fixed; }
+        .adm-sidebar.mobile-open { transform: translateX(0); box-shadow: 8px 0 40px rgba(0,0,0,0.5); }
+        .adm-sidebar.collapsed { transform: translateX(-100%); width: var(--sidebar-w); min-width: var(--sidebar-w); }
+        .adm-sidebar.collapsed .sb-label, .adm-sidebar.collapsed .sb-brand-text,
+        .adm-sidebar.collapsed .sb-section-title, .adm-sidebar.collapsed #sidebarDishCount { opacity: 1; width: auto; overflow: visible; pointer-events: auto; }
+        .adm-sidebar.collapsed .sb-nav-link { justify-content: flex-start; padding: 0.65rem 0.85rem; }
+        .adm-main { margin-left: 0 !important; }
+        .adm-content { padding: 1.25rem; }
+        .header-clock { display: none; }
+        #dishTable thead th:first-child, #dishTable tbody td:first-child { display: none; }
+      }
+      @media (max-width: 767.98px) {
+        .stat-grid { grid-template-columns: repeat(2,1fr); gap: 0.85rem; }
+        .adm-content { padding: 1rem; gap: 1rem; }
+        .table-toolbar { flex-direction: column; align-items: flex-start; }
+        .toolbar-left { width: 100%; }
+        .search-wrap { max-width: 100%; width: 100%; }
+        .filter-select { min-width: 0; flex: 1; }
+        #btnAddDish { width: 100%; justify-content: center; }
+        .footer-inner { flex-direction: column; text-align: center; }
+        .footer-contact { align-items: center; }
+        .footer-social { justify-content: center; }
+      }
+      @media (max-width: 575.98px) {
+        .stat-grid { grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+        .stat-card { padding: 1.1rem; }
+        .stat-value { font-size: 1.6rem; }
+        #dishTable thead th:nth-child(4), #dishTable tbody td:nth-child(4) { display: none; }
+        .adm-header { padding: 0 1rem; }
+        .adm-breadcrumb { display: none; }
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- BACKGROUND -->
+    <div class="page-bg" role="presentation" aria-hidden="true"></div>
+    <div class="page-bg-overlay" aria-hidden="true"></div>
+    <div class="sidebar-overlay" id="sidebarOverlay" aria-hidden="true"></div>
+
+    <div class="adm-wrapper">
+
+      <!-- ══════════ SIDEBAR ══════════ -->
+      <aside class="adm-sidebar" id="adminSidebar" role="navigation" aria-label="Menu quản trị">
+        <a class="sb-brand" href="../index.html" aria-label="FoodieMenu - Trang chủ">
+          <div class="sb-brand-icon" aria-hidden="true">🍽️</div>
+          <div class="sb-brand-text">
+            <span class="sb-brand-name">Foodie<span>Admin</span></span>
+            <span class="sb-brand-badge"><i class="bi bi-shield-fill" aria-hidden="true"></i> Dashboard</span>
+          </div>
+        </a>
+
+        <nav class="sb-nav" aria-label="Điều hướng sidebar">
+          <div class="sb-section-title">TỔNG QUAN</div>
+          <div class="sb-nav-item">
+            <a href="index.html" class="sb-nav-link active" aria-current="page">
+              <i class="bi bi-speedometer2 sb-icon" aria-hidden="true"></i>
+              <span class="sb-label">Dashboard</span>
+            </a>
+          </div>
+
+          <div class="sb-section-title">QUẢN LÝ</div>
+          <div class="sb-nav-item">
+            <a href="index.html" class="sb-nav-link">
+              <i class="bi bi-grid-3x3-gap-fill sb-icon" aria-hidden="true"></i>
+              <span class="sb-label">Quản Lý Món Ăn</span>
+              <span id="sidebarDishCount">...</span>
+            </a>
+          </div>
+          <div class="sb-nav-item">
+            <a href="#" class="sb-nav-link">
+              <i class="bi bi-tags-fill sb-icon" aria-hidden="true"></i>
+              <span class="sb-label">Danh Mục</span>
+            </a>
+          </div>
+          <div class="sb-nav-item">
+            <a href="#" class="sb-nav-link">
+              <i class="bi bi-bar-chart-fill sb-icon" aria-hidden="true"></i>
+              <span class="sb-label">Thống Kê</span>
+            </a>
+          </div>
+
+          <div class="sb-section-title">HỆ THỐNG</div>
+          <div class="sb-nav-item">
+            <a href="#" class="sb-nav-link">
+              <i class="bi bi-gear-fill sb-icon" aria-hidden="true"></i>
+              <span class="sb-label">Cài Đặt</span>
+            </a>
+          </div>
+          <div class="sb-nav-item">
+            <a href="#" class="sb-nav-link">
+              <i class="bi bi-headset sb-icon" aria-hidden="true"></i>
+              <span class="sb-label">Hỗ Trợ</span>
+            </a>
+          </div>
+          <div class="sb-nav-item">
+            <a href="../index.html" class="sb-nav-link" target="_blank" rel="noopener">
+              <i class="bi bi-box-arrow-up-right sb-icon" aria-hidden="true"></i>
+              <span class="sb-label">Xem Trang Khách</span>
+            </a>
+          </div>
+        </nav>
+
+        <div class="sb-footer">
+          <div class="sb-footer-text"><strong>v1.0.0</strong> · MockAPI.io · KzX Corp</div>
+        </div>
+      </aside>
+
+      <!-- ══════════ MAIN ══════════ -->
+      <div class="adm-main" id="adminMain">
+
+        <!-- HEADER -->
+        <header class="adm-header" role="banner">
+          <div class="header-left">
+            <button class="sb-toggle-btn" id="sidebarToggle" type="button" aria-label="Mở/đóng sidebar" title="Thu gọn menu">
+              <i class="bi bi-list" aria-hidden="true"></i>
+            </button>
+            <nav class="adm-breadcrumb d-none d-sm-flex" aria-label="Breadcrumb">
+              <a href="../index.html"><i class="bi bi-house" aria-hidden="true"></i> Trang chủ</a>
+              <i class="bi bi-chevron-right bc-sep" aria-hidden="true"></i>
+              <a href="index.html">Admin</a>
+              <i class="bi bi-chevron-right bc-sep" aria-hidden="true"></i>
+              <span class="bc-current">Quản lý món ăn</span>
+            </nav>
+          </div>
+
+          <div class="header-right">
+            <div class="header-clock d-none d-md-flex" aria-live="polite" aria-label="Thời gian hiện tại">
+              <span class="clock-time" id="headerClock">00:00:00</span>
+              <span class="clock-date" id="headerDate">--/--/----</span>
+            </div>
+
+            <div class="header-api-status d-none d-sm-flex" id="apiStatusIndicator" title="Trạng thái kết nối API" aria-live="polite">
+              <span id="apiStatusDot"></span>
+              <span id="apiStatusText">Đang kết nối...</span>
+            </div>
+
+            <a href="../index.html" class="btn-header-home d-none d-md-inline-flex" title="Về trang khách hàng">
+              <i class="bi bi-house-door" aria-hidden="true"></i> Trang chủ
+            </a>
+
+            <div class="header-avatar" role="button" tabindex="0" aria-label="Admin" title="Admin">
+              A
+              <span class="avatar-online" aria-hidden="true"></span>
+            </div>
+          </div>
+        </header>
+
+        <!-- CONTENT -->
+        <main class="adm-content" role="main">
+
+          <!-- Alert -->
+          <div id="adminAlertContainer" role="alert" aria-live="polite"></div>
+
+          <!-- STAT CARDS -->
+          <div class="stat-grid" aria-label="Thống kê tổng quan">
+            <div class="stat-card stat-card-brand fade-in-up">
+              <div class="stat-icon-wrap" aria-hidden="true">
+                <i class="bi bi-grid-3x3-gap-fill" style="color:white;"></i>
+              </div>
+              <div class="stat-info">
+                <div class="stat-value" id="statTotalDishes">--</div>
+                <div class="stat-label">Tổng Món Ăn</div>
+              </div>
+            </div>
+            <div class="stat-card stat-card-success fade-in-up">
+              <div class="stat-icon-wrap" aria-hidden="true">
+                <i class="bi bi-check-circle-fill" style="color:white;"></i>
+              </div>
+              <div class="stat-info">
+                <div class="stat-value" id="statAvailable">--</div>
+                <div class="stat-label">Còn Phục Vụ</div>
+              </div>
+            </div>
+            <div class="stat-card stat-card-danger fade-in-up">
+              <div class="stat-icon-wrap" aria-hidden="true">
+                <i class="bi bi-x-circle-fill" style="color:white;"></i>
+              </div>
+              <div class="stat-info">
+                <div class="stat-value" id="statSoldout">--</div>
+                <div class="stat-label">Hết / Ngừng Bán</div>
+              </div>
+            </div>
+            <div class="stat-card stat-card-info fade-in-up">
+              <div class="stat-icon-wrap" aria-hidden="true">
+                <i class="bi bi-tags-fill" style="color:white;"></i>
+              </div>
+              <div class="stat-info">
+                <div class="stat-value" id="statCategories">--</div>
+                <div class="stat-label">Danh Mục</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TABLE -->
+          <div class="table-glass fade-in-up" style="animation-delay:0.22s;">
+
+            <div class="table-toolbar">
+              <div class="toolbar-left">
+                <div class="toolbar-title">
+                  <i class="bi bi-table" aria-hidden="true"></i>
+                  Danh Sách Món Ăn
+                </div>
+
+                <div class="search-wrap">
+                  <i class="bi bi-search search-icon-i" aria-hidden="true"></i>
+                  <input
+                    type="search"
+                    id="tableSearch"
+                    placeholder="Tìm kiếm món ăn..."
+                    autocomplete="off"
+                    aria-label="Tìm kiếm trong bảng"
+                  />
+                </div>
+
+                <select id="tableStatusFilter" class="filter-select" aria-label="Lọc theo trạng thái">
+                  <option value="all">Tất cả trạng thái</option>
+                  <option value="available">Còn phục vụ</option>
+                  <option value="soldout">Hết món</option>
+                </select>
+
+                <select id="tableCategoryFilter" class="filter-select" aria-label="Lọc theo danh mục">
+                  <option value="all">Tất cả danh mục</option>
+                </select>
+              </div>
+
+              <button
+                type="button"
+                id="btnAddDish"
+                data-bs-toggle="modal"
+                data-bs-target="#dishFormModal"
+                aria-label="Thêm món ăn mới"
+              >
+                <i class="bi bi-plus-lg" aria-hidden="true"></i>
+                Thêm Món Mới
+              </button>
+            </div>
+
+            <div class="table-responsive-wrap">
+              <table id="dishTable" aria-label="Bảng quản lý món ăn" aria-live="polite">
+                <thead>
+                  <tr>
+                    <th scope="col" style="width:75px;">
+                      <button data-sort="id" type="button">
+                        ID <i class="bi bi-chevron-expand" style="font-size:0.6rem;" aria-hidden="true"></i>
+                      </button>
+                    </th>
+                    <th scope="col" style="width:66px;">Ảnh</th>
+                    <th scope="col">
+                      <button data-sort="name" type="button">
+                        Tên Món <i class="bi bi-chevron-expand" style="font-size:0.6rem;" aria-hidden="true"></i>
+                      </button>
+                    </th>
+                    <th scope="col">Danh Mục</th>
+                    <th scope="col">
+                      <button data-sort="price" type="button">
+                        Giá <i class="bi bi-chevron-expand" style="font-size:0.6rem;" aria-hidden="true"></i>
+                      </button>
+                    </th>
+                    <th scope="col" style="width:130px;">Trạng Thái</th>
+                    <th scope="col" style="width:100px;text-align:center;">Hành Động</th>
+                  </tr>
+                </thead>
+                <tbody id="dishTableBody">
+                  <!-- Skeleton rows -->
+                  <tr class="table-skeleton-row">
+                    <td><div class="skeleton skeleton-text" style="width:48px;"></div></td>
+                    <td><div class="skeleton" style="width:52px;height:52px;border-radius:10px;"></div></td>
+                    <td><div class="skeleton skeleton-text" style="width:140px;"></div></td>
+                    <td><div class="skeleton skeleton-text" style="width:80px;"></div></td>
+                    <td><div class="skeleton skeleton-text" style="width:72px;"></div></td>
+                    <td><div class="skeleton skeleton-pill" style="width:90px;height:22px;"></div></td>
+                    <td><div class="skeleton skeleton-rect" style="width:72px;height:32px;border-radius:8px;margin:0 auto;"></div></td>
+                  </tr>
+                  <tr class="table-skeleton-row">
+                    <td><div class="skeleton skeleton-text" style="width:48px;"></div></td>
+                    <td><div class="skeleton" style="width:52px;height:52px;border-radius:10px;"></div></td>
+                    <td><div class="skeleton skeleton-text" style="width:160px;"></div></td>
+                    <td><div class="skeleton skeleton-text" style="width:70px;"></div></td>
+                    <td><div class="skeleton skeleton-text" style="width:80px;"></div></td>
+                    <td><div class="skeleton skeleton-pill" style="width:90px;height:22px;"></div></td>
+                    <td><div class="skeleton skeleton-rect" style="width:72px;height:32px;border-radius:8px;margin:0 auto;"></div></td>
+                  </tr>
+                  <tr class="table-skeleton-row">
+                    <td><div class="skeleton skeleton-text" style="width:48px;"></div></td>
+                    <td><div class="skeleton" style="width:52px;height:52px;border-radius:10px;"></div></td>
+                    <td><div class="skeleton skeleton-text" style="width:120px;"></div></td>
+                    <td><div class="skeleton skeleton-text" style="width:90px;"></div></td>
+                    <td><div class="skeleton skeleton-text" style="width:65px;"></div></td>
+                    <td><div class="skeleton skeleton-pill" style="width:90px;height:22px;"></div></td>
+                    <td><div class="skeleton skeleton-rect" style="width:72px;height:32px;border-radius:8px;margin:0 auto;"></div></td>
+                  </tr>
+                  <tr class="table-skeleton-row">
+                    <td><div class="skeleton skeleton-text" style="width:48px;"></div></td>
+                    <td><div class="skeleton" style="width:52px;height:52px;border-radius:10px;"></div></td>
+                    <td><div class="skeleton skeleton-text" style="width:150px;"></div></td>
+                    <td><div class="skeleton skeleton-text" style="width:75px;"></div></td>
+                    <td><div class="skeleton skeleton-text" style="width:70px;"></div></td>
+                    <td><div class="skeleton skeleton-pill" style="width:90px;height:22px;"></div></td>
+                    <td><div class="skeleton skeleton-rect" style="width:72px;height:32px;border-radius:8px;margin:0 auto;"></div></td>
+                  </tr>
+                  <tr class="table-skeleton-row">
+                    <td><div class="skeleton skeleton-text" style="width:48px;"></div></td>
+                    <td><div class="skeleton" style="width:52px;height:52px;border-radius:10px;"></div></td>
+                    <td><div class="skeleton skeleton-text" style="width:130px;"></div></td>
+                    <td><div class="skeleton skeleton-text" style="width:85px;"></div></td>
+                    <td><div class="skeleton skeleton-text" style="width:75px;"></div></td>
+                    <td><div class="skeleton skeleton-pill" style="width:90px;height:22px;"></div></td>
+                    <td><div class="skeleton skeleton-rect" style="width:72px;height:32px;border-radius:8px;margin:0 auto;"></div></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="table-footer-bar">
+              <span id="tableInfo">Đang tải...</span>
+              <div class="rows-wrap">
+                <label for="rowsPerPage">Hiển thị:</label>
+                <select id="rowsPerPage" aria-label="Số hàng mỗi trang">
+                  <option value="10" selected>10</option>
+                  <option value="20">20</option>
+                  <option value="50">50</option>
+                  <option value="9999">Tất cả</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+        </main>
+
+        <!-- FOOTER -->
+        <footer class="adm-footer" role="contentinfo">
+          <div class="footer-inner">
+            <div class="footer-brand">
+              <div class="footer-brand-logo" aria-hidden="true">🍽️</div>
+              <div class="footer-brand-info">
+                <strong>KzX Corp · FoodieMenu Admin</strong>
+                <span>Hà Nội, Việt Nam</span>
+              </div>
+            </div>
+
+            <div class="footer-center">
+              <div class="footer-contact">
+                <a href="tel:0866044026"><i class="bi bi-telephone-fill" aria-hidden="true"></i> 0866 044 026</a>
+                <a href="mailto:kzinfortech@gmail.com"><i class="bi bi-envelope-fill" aria-hidden="true"></i> kzinfortech@gmail.com</a>
+                <span style="color:rgba(255,255,255,0.3);font-size:0.68rem;">
+                  <i class="bi bi-bank2" aria-hidden="true"></i>
+                  Techcombank · <span style="font-family:monospace;">5555 5555 5553</span>
+                </span>
+              </div>
+              <div class="footer-copy">©2026 <strong>KzX Corp</strong>. Bảo lưu mọi quyền.</div>
+            </div>
+
+            <div class="footer-social">
+              <a class="footer-social-btn fb" href="https://www.facebook.com/Kz.3103" target="_blank" rel="noopener noreferrer" aria-label="Facebook" title="Facebook">
+                <i class="bi bi-facebook" aria-hidden="true"></i>
+              </a>
+              <a class="footer-social-btn tt" href="https://www.tiktok.com/@kzis.corp" target="_blank" rel="noopener noreferrer" aria-label="TikTok" title="TikTok">
+                <i class="fab fa-tiktok" aria-hidden="true"></i>
+              </a>
+              <a class="footer-social-btn ig" href="https://www.instagram.com/zen.hi.144" target="_blank" rel="noopener noreferrer" aria-label="Instagram" title="Instagram">
+                <i class="bi bi-instagram" aria-hidden="true"></i>
+              </a>
+            </div>
+          </div>
+        </footer>
+
+      </div><!-- /adm-main -->
+    </div><!-- /adm-wrapper -->
+
+    <!-- ══════════════════════════════════════════════════
+         MODAL: THÊM / SỬA MÓN ĂN
+         Tất cả id, name, data-* ĐƯỢC GIỮ NGUYÊN
+    ══════════════════════════════════════════════════ -->
+    <div
+      class="modal fade"
+      id="dishFormModal"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="dishFormModalLabel"
+      aria-hidden="true"
+      data-bs-backdrop="static"
+      data-bs-keyboard="false"
+    >
+      <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+
+          <div class="modal-header">
+            <h2 class="modal-title" id="dishFormModalLabel">
+              <i class="bi bi-plus-circle" id="modalFormIcon" aria-hidden="true"></i>
+              <span id="modalFormTitle">Thêm Món Ăn Mới</span>
+            </h2>
+            <button type="button" class="btn-close" id="modalCloseBtn" data-bs-dismiss="modal" aria-label="Đóng"></button>
+          </div>
+
+          <div class="modal-body">
+            <div id="formAlertContainer" class="mb-3"></div>
+
+            <form id="dishForm" novalidate autocomplete="off">
+              <!-- Hidden ID khi edit -->
+              <input type="hidden" id="fieldDishId" name="id" />
+
+              <!-- SECTION 1 -->
+              <div class="form-section-title">
+                <i class="bi bi-info-circle" aria-hidden="true"></i>
+                Thông Tin Cơ Bản
+              </div>
+
+              <div class="row g-3 mb-3">
+                <div class="col-12">
+                  <label for="fieldName" class="form-label">
+                    Tên Món Ăn <span class="required-mark" aria-hidden="true">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    id="fieldName"
+                    name="name"
+                    class="form-control"
+                    placeholder="VD: Phở Bò Tái Nạm Gân"
+                    maxlength="100"
+                    aria-required="true"
+                    aria-describedby="errorName nameCharCount"
+                  />
+                  <div class="field-error" id="errorName" role="alert">
+                    <i class="bi bi-exclamation-circle-fill" aria-hidden="true"></i>
+                    <span class="error-msg"></span>
+                  </div>
+                  <small id="nameCharCount">0/100</small>
+                </div>
+
+                <div class="col-sm-6">
+                  <label for="fieldPrice" class="form-label">
+                    Giá Tiền (VNĐ) <span class="required-mark" aria-hidden="true">*</span>
+                  </label>
+                  <div class="input-group">
+                    <span class="input-group-text" aria-hidden="true">₫</span>
+                    <input
+                      type="number"
+                      id="fieldPrice"
+                      name="price"
+                      class="form-control"
+                      placeholder="VD: 75000"
+                      min="0"
+                      max="100000000"
+                      step="1000"
+                      aria-required="true"
+                      aria-describedby="errorPrice pricePreview"
+                    />
+                  </div>
+                  <div class="field-error" id="errorPrice" role="alert">
+                    <i class="bi bi-exclamation-circle-fill" aria-hidden="true"></i>
+                    <span class="error-msg"></span>
+                  </div>
+                  <small id="pricePreview" aria-live="polite"></small>
+                </div>
+
+                <div class="col-sm-6">
+                  <label for="fieldCategory" class="form-label">
+                    Danh Mục <span class="required-mark" aria-hidden="true">*</span>
+                  </label>
+                  <select
+                    id="fieldCategory"
+                    name="categoryId"
+                    class="form-select"
+                    aria-required="true"
+                    aria-describedby="errorCategory"
+                  >
+                    <option value="">-- Chọn danh mục --</option>
+                  </select>
+                  <div class="field-error" id="errorCategory" role="alert">
+                    <i class="bi bi-exclamation-circle-fill" aria-hidden="true"></i>
+                    <span class="error-msg"></span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- SECTION 2 -->
+              <div class="form-section-title">
+                <i class="bi bi-image" aria-hidden="true"></i>
+                Hình Ảnh
+              </div>
+
+              <div class="mb-3">
+                <label for="fieldImage" class="form-label">
+                  URL Hình Ảnh
+                  <span style="font-size:0.75rem;color:var(--text-muted);font-weight:400;">(Tùy chọn)</span>
+                </label>
+                <div class="input-group">
+                  <span class="input-group-text" aria-hidden="true">
+                    <i class="bi bi-link-45deg"></i>
+                  </span>
+                  <input
+                    type="url"
+                    id="fieldImage"
+                    name="image"
+                    class="form-control"
+                    placeholder="https://example.com/image.jpg"
+                    aria-describedby="errorImage imageHelp"
+                  />
+                  <button type="button" id="previewImageBtn" aria-label="Xem trước ảnh" title="Xem trước ảnh">
+                    <i class="bi bi-eye" aria-hidden="true"></i>
+                  </button>
+                </div>
+                <div class="field-error" id="errorImage" role="alert">
+                  <i class="bi bi-exclamation-circle-fill" aria-hidden="true"></i>
+                  <span class="error-msg"></span>
+                </div>
+                <small id="imageHelp" style="font-size:0.72rem;color:var(--text-muted);display:block;margin-top:3px;">
+                  Hỗ trợ: .jpg .jpeg .png .gif .webp — Để trống để dùng ảnh mặc định.
+                </small>
+                <div id="imagePreviewWrap">
+                  <img id="imagePreviewImg" src="" alt="Xem trước ảnh món ăn"
+                    onerror="document.getElementById('imagePreviewWrap').style.display='none';" />
+                </div>
+              </div>
+
+              <!-- SECTION 3 -->
+              <div class="form-section-title">
+                <i class="bi bi-card-text" aria-hidden="true"></i>
+                Mô Tả & Trạng Thái
+              </div>
+
+              <div class="row g-3">
+                <div class="col-12">
+                  <label for="fieldDescription" class="form-label">
+                    Mô Tả Ngắn
+                    <span style="font-size:0.75rem;color:var(--text-muted);font-weight:400;">(Tùy chọn)</span>
+                  </label>
+                  <textarea
+                    id="fieldDescription"
+                    name="description"
+                    class="form-control"
+                    rows="3"
+                    maxlength="500"
+                    placeholder="Mô tả ngắn về món ăn, nguyên liệu, hương vị đặc trưng..."
+                    aria-describedby="descCharCount"
+                  ></textarea>
+                  <small id="descCharCount">0/500</small>
+                </div>
+
+                <div class="col-12">
+                  <div class="toggle-status-wrap">
+                    <div class="toggle-label-group">
+                      <div class="toggle-title">Trạng Thái Phục Vụ</div>
+                      <small id="statusDescription">Món ăn hiện đang được phục vụ cho khách</small>
+                    </div>
+                    <div class="d-flex align-items-center gap-2">
+                      <div class="form-check form-switch mb-0">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          id="fieldIsAvailable"
+                          name="isAvailable"
+                          checked
+                          role="switch"
+                          aria-describedby="statusDescription"
+                        />
+                        <label class="form-check-label" for="fieldIsAvailable" id="statusToggleLabel">
+                          <span class="text-success fw-bold">Còn món</span>
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </form>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" id="cancelFormBtn" data-bs-dismiss="modal">
+              <i class="bi bi-x" aria-hidden="true"></i> Hủy
+            </button>
+            <button type="button" id="submitFormBtn">
+              <i class="bi bi-check-lg" id="submitBtnIcon" aria-hidden="true"></i>
+              <span id="submitBtnText">Lưu Món Ăn</span>
+            </button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════
+         MODAL: XÁC NHẬN XÓA
+         Tất cả id ĐƯỢC GIỮ NGUYÊN — admin.js đọc từ AdminState
+    ══════════════════════════════════════════════════ -->
+    <div
+      class="modal fade"
+      id="deleteConfirmModal"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="deleteModalLabel"
+      aria-describedby="deleteModalDesc"
+    >
+      <div class="modal-dialog modal-dialog-centered" style="max-width:420px;">
+        <div class="modal-content">
+          <div class="modal-body">
+
+            <div class="delete-icon-wrap" aria-hidden="true">
+              <i class="bi bi-trash3-fill"></i>
+            </div>
+
+            <h3 class="delete-modal-title" id="deleteModalLabel">Xác Nhận Xóa Món Ăn</h3>
+
+            <p id="deleteModalDesc" style="font-size:0.875rem;color:var(--text-muted);margin-bottom:0.25rem;">
+              Bạn có chắc chắn muốn xóa:
+            </p>
+
+            <!-- id="deleteDishName" PRESERVED — JS cũng đọc AdminState.pendingDeleteId -->
+            <span id="deleteDishName"></span>
+
+            <div class="delete-warning-box">
+              <i class="bi bi-exclamation-triangle-fill flex-shrink-0" aria-hidden="true"></i>
+              Hành động này <strong>không thể hoàn tác</strong>. Dữ liệu sẽ bị xóa vĩnh viễn khỏi hệ thống.
+            </div>
+
+            <!-- id="deleteDishId" PRESERVED (hidden input, JS ưu tiên AdminState) -->
+            <input type="hidden" id="deleteDishId" />
+
+            <div class="delete-actions">
+              <button type="button" class="btn-cancel-delete" data-bs-dismiss="modal">
+                <i class="bi bi-x" aria-hidden="true"></i> Hủy Bỏ
+              </button>
+              <button type="button" id="confirmDeleteBtn">
+                <i class="bi bi-trash3" aria-hidden="true"></i>
+                <span id="confirmDeleteText">Xóa Ngay</span>
+              </button>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════
+         SCRIPTS — ĐÚNG THỨ TỰ
+    ══════════════════════════════════════════════════ -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../js/utils.js"></script>
+    <script src="../js/api.js"></script>
+    <script src="../js/admin.js"></script>
+
+    <!-- UI ENHANCEMENTS ONLY (không đụng logic JS) -->
+    <script>
+      (function () {
+        'use strict';
+
+        /* Clock */
+        function updateClock() {
+          var now  = new Date();
+          var pad  = function(n){ return String(n).padStart(2,'0'); };
+          var days = ['Chủ Nhật','Thứ Hai','Thứ Ba','Thứ Tư','Thứ Năm','Thứ Sáu','Thứ Bảy'];
+          var clockEl = document.getElementById('headerClock');
+          var dateEl  = document.getElementById('headerDate');
+          if (clockEl) clockEl.textContent = pad(now.getHours()) + ':' + pad(now.getMinutes()) + ':' + pad(now.getSeconds());
+          if (dateEl)  dateEl.textContent  = days[now.getDay()] + ', ' + pad(now.getDate()) + '/' + pad(now.getMonth()+1) + '/' + now.getFullYear();
+        }
+        updateClock();
+        setInterval(updateClock, 1000);
+
+        /* Sidebar Toggle */
+        var sidebar  = document.getElementById('adminSidebar');
+        var mainArea = document.getElementById('adminMain');
+        var toggle   = document.getElementById('sidebarToggle');
+        var overlay  = document.getElementById('sidebarOverlay');
+        var isMobile = function(){ return window.innerWidth < 992; };
+
+        function closeMobile() {
+          if (sidebar) sidebar.classList.remove('mobile-open');
+          if (overlay) overlay.classList.remove('show');
+          document.body.style.overflow = '';
+        }
+
+        if (toggle) {
+          toggle.addEventListener('click', function () {
+            if (isMobile()) {
+              var open = sidebar && sidebar.classList.contains('mobile-open');
+              if (open) { closeMobile(); }
+              else {
+                if (sidebar) sidebar.classList.add('mobile-open');
+                if (overlay) overlay.classList.add('show');
+                document.body.style.overflow = 'hidden';
+              }
+            } else {
+              if (sidebar)  sidebar.classList.toggle('collapsed');
+              if (mainArea) mainArea.classList.toggle('sidebar-collapsed');
+            }
+          });
+        }
+
+        if (overlay) { overlay.addEventListener('click', closeMobile); }
+
+        window.addEventListener('resize', function () {
+          if (!isMobile()) {
+            closeMobile();
+            if (sidebar)  sidebar.classList.remove('mobile-open');
+          }
+        }, { passive: true });
+
+      })();
+    </script>
+
+  </body>
+</html>

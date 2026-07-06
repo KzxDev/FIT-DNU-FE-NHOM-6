@@ -1,0 +1,3173 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="FoodieMenu – Khám phá thực đơn nhà hàng cao cấp với hàng trăm món ăn hấp dẫn từ KzX Corp"
+    />
+    <meta name="theme-color" content="#ff6b35" />
+    <title>FoodieMenu 🍽️ – Thực Đơn Cao Cấp | KzX Corp</title>
+
+    <!-- ═══════════════════════════════════════════
+         CSS DEPENDENCIES
+    ═══════════════════════════════════════════ -->
+
+    <!-- Bootstrap 5.3 -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+    />
+
+    <!-- Bootstrap Icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    />
+
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&family=Playfair+Display:ital,wght@0,700;0,800;0,900;1,700&family=Dancing+Script:wght@700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Custom CSS (BẮT BUỘC GIỮ) -->
+    <link rel="stylesheet" href="css/style.css" />
+
+    <!-- ═══════════════════════════════════════════
+         INLINE STYLES – THIẾT KẾ LẠI GIAO DIỆN
+    ═══════════════════════════════════════════ -->
+    <style>
+      /* ─────────────────────────────────────────
+         DESIGN TOKENS
+      ───────────────────────────────────────── */
+      :root {
+        --brand-primary: #ff6b35;
+        --brand-primary-dark: #e8521c;
+        --brand-primary-light: #ff8f5e;
+        --brand-secondary: #1a1a2e;
+        --brand-accent: #ffd166;
+        --brand-accent2: #06d6a0;
+        --glass-bg: rgba(255, 255, 255, 0.08);
+        --glass-border: rgba(255, 255, 255, 0.18);
+        --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+        --card-radius: 20px;
+        --btn-radius: 50px;
+        --font-main: "Be Vietnam Pro", sans-serif;
+        --font-display: "Playfair Display", serif;
+        --font-script: "Dancing Script", cursive;
+        --transition-smooth: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        --transition-bounce: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        --shadow-card: 0 10px 40px rgba(0, 0, 0, 0.12);
+        --shadow-card-hover: 0 24px 60px rgba(255, 107, 53, 0.25),
+          0 8px 24px rgba(0, 0, 0, 0.15);
+        --shadow-glow: 0 0 30px rgba(255, 107, 53, 0.45);
+        --gradient-brand: linear-gradient(
+          135deg,
+          #ff6b35 0%,
+          #ff8f5e 50%,
+          #ffd166 100%
+        );
+        --gradient-dark: linear-gradient(
+          135deg,
+          #0f0c29 0%,
+          #302b63 50%,
+          #24243e 100%
+        );
+        --gradient-hero: linear-gradient(
+          135deg,
+          rgba(15, 12, 41, 0.92) 0%,
+          rgba(26, 26, 46, 0.85) 40%,
+          rgba(255, 107, 53, 0.15) 100%
+        );
+      }
+
+      /* ─────────────────────────────────────────
+         GLOBAL RESET & BASE
+      ───────────────────────────────────────── */
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      html {
+        scroll-behavior: smooth;
+        font-size: 16px;
+      }
+
+      body {
+        font-family: var(--font-main);
+        background: #0a0a12;
+        color: #1a1a2e;
+        overflow-x: hidden;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      ::selection {
+        background: var(--brand-primary);
+        color: white;
+      }
+
+      img {
+        max-width: 100%;
+        display: block;
+      }
+
+      a {
+        text-decoration: none;
+        transition: var(--transition-smooth);
+      }
+
+      /* ─────────────────────────────────────────
+         FLOATING FOOD ICONS BACKGROUND
+      ───────────────────────────────────────── */
+      .floating-food-bg {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 0;
+        overflow: hidden;
+      }
+
+      .food-icon {
+        position: absolute;
+        font-size: 1.6rem;
+        opacity: 0;
+        animation: floatFood linear infinite;
+        user-select: none;
+        filter: blur(0.3px);
+        will-change: transform, opacity;
+      }
+
+      /* Vị trí ngang ngẫu nhiên cho từng icon */
+      .food-icon:nth-child(1) {
+        left: 5%;
+        animation-duration: 18s;
+        animation-delay: 0s;
+        font-size: 1.4rem;
+      }
+      .food-icon:nth-child(2) {
+        left: 12%;
+        animation-duration: 22s;
+        animation-delay: 2s;
+        font-size: 1.8rem;
+      }
+      .food-icon:nth-child(3) {
+        left: 20%;
+        animation-duration: 16s;
+        animation-delay: 4s;
+        font-size: 1.3rem;
+      }
+      .food-icon:nth-child(4) {
+        left: 30%;
+        animation-duration: 24s;
+        animation-delay: 1s;
+        font-size: 2rem;
+      }
+      .food-icon:nth-child(5) {
+        left: 40%;
+        animation-duration: 20s;
+        animation-delay: 6s;
+        font-size: 1.5rem;
+      }
+      .food-icon:nth-child(6) {
+        left: 52%;
+        animation-duration: 17s;
+        animation-delay: 3s;
+        font-size: 1.7rem;
+      }
+      .food-icon:nth-child(7) {
+        left: 62%;
+        animation-duration: 21s;
+        animation-delay: 5s;
+        font-size: 1.4rem;
+      }
+      .food-icon:nth-child(8) {
+        left: 70%;
+        animation-duration: 19s;
+        animation-delay: 7s;
+        font-size: 2.1rem;
+      }
+      .food-icon:nth-child(9) {
+        left: 78%;
+        animation-duration: 23s;
+        animation-delay: 2.5s;
+        font-size: 1.6rem;
+      }
+      .food-icon:nth-child(10) {
+        left: 86%;
+        animation-duration: 15s;
+        animation-delay: 8s;
+        font-size: 1.3rem;
+      }
+      .food-icon:nth-child(11) {
+        left: 92%;
+        animation-duration: 25s;
+        animation-delay: 1.5s;
+        font-size: 1.9rem;
+      }
+      .food-icon:nth-child(12) {
+        left: 97%;
+        animation-duration: 18s;
+        animation-delay: 9s;
+        font-size: 1.5rem;
+      }
+
+      @keyframes floatFood {
+        0% {
+          transform: translateY(110vh) rotate(0deg) scale(0.6);
+          opacity: 0;
+        }
+        5% {
+          opacity: 0.12;
+        }
+        50% {
+          transform: translateY(50vh) rotate(180deg) scale(1);
+          opacity: 0.18;
+        }
+        90% {
+          opacity: 0.1;
+        }
+        100% {
+          transform: translateY(-10vh) rotate(360deg) scale(0.7);
+          opacity: 0;
+        }
+      }
+
+      /* ─────────────────────────────────────────
+         SCROLL REVEAL ANIMATION
+      ───────────────────────────────────────── */
+      .reveal {
+        opacity: 0;
+        transform: translateY(40px);
+        transition: opacity 0.7s ease, transform 0.7s ease;
+      }
+
+      .reveal.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .reveal-left {
+        opacity: 0;
+        transform: translateX(-40px);
+        transition: opacity 0.7s ease, transform 0.7s ease;
+      }
+
+      .reveal-left.visible {
+        opacity: 1;
+        transform: translateX(0);
+      }
+
+      .reveal-right {
+        opacity: 0;
+        transform: translateX(40px);
+        transition: opacity 0.7s ease, transform 0.7s ease;
+      }
+
+      .reveal-right.visible {
+        opacity: 1;
+        transform: translateX(0);
+      }
+
+      /* Stagger delay */
+      .reveal-delay-1 { transition-delay: 0.1s; }
+      .reveal-delay-2 { transition-delay: 0.2s; }
+      .reveal-delay-3 { transition-delay: 0.3s; }
+      .reveal-delay-4 { transition-delay: 0.4s; }
+      .reveal-delay-5 { transition-delay: 0.5s; }
+      .reveal-delay-6 { transition-delay: 0.6s; }
+
+      /* ─────────────────────────────────────────
+         NAVBAR
+      ───────────────────────────────────────── */
+      .fm-navbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 9000;
+        padding: 0.9rem 0;
+        transition: var(--transition-smooth);
+        background: transparent;
+      }
+
+      .fm-navbar.scrolled {
+        background: rgba(10, 10, 18, 0.88);
+        backdrop-filter: blur(20px) saturate(1.5);
+        -webkit-backdrop-filter: blur(20px) saturate(1.5);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+        padding: 0.6rem 0;
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4);
+      }
+
+      .fm-navbar .navbar-brand {
+        font-family: var(--font-display);
+        font-size: 1.6rem;
+        font-weight: 800;
+        color: white !important;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        letter-spacing: -0.02em;
+        transition: var(--transition-smooth);
+      }
+
+      .fm-navbar .navbar-brand:hover {
+        transform: scale(1.04);
+      }
+
+      .brand-icon-wrap {
+        width: 42px;
+        height: 42px;
+        border-radius: 12px;
+        background: var(--gradient-brand);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.3rem;
+        box-shadow: var(--shadow-glow);
+        flex-shrink: 0;
+      }
+
+      .brand-accent {
+        background: var(--gradient-brand);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .fm-navbar .nav-link {
+        color: rgba(255, 255, 255, 0.8) !important;
+        font-weight: 500;
+        font-size: 0.95rem;
+        padding: 0.45rem 1rem !important;
+        border-radius: 50px;
+        transition: var(--transition-smooth);
+        position: relative;
+      }
+
+      .fm-navbar .nav-link::after {
+        content: "";
+        position: absolute;
+        bottom: 4px;
+        left: 50%;
+        transform: translateX(-50%) scaleX(0);
+        width: 20px;
+        height: 2px;
+        background: var(--gradient-brand);
+        border-radius: 2px;
+        transition: transform 0.3s ease;
+      }
+
+      .fm-navbar .nav-link:hover {
+        color: white !important;
+        background: rgba(255, 255, 255, 0.08);
+      }
+
+      .fm-navbar .nav-link:hover::after,
+      .fm-navbar .nav-link.active::after {
+        transform: translateX(-50%) scaleX(1);
+      }
+
+      .fm-navbar .nav-link.active {
+        color: white !important;
+        font-weight: 600;
+      }
+
+      .btn-nav-cta {
+        background: var(--gradient-brand);
+        color: white !important;
+        font-weight: 700;
+        padding: 0.5rem 1.4rem !important;
+        border-radius: var(--btn-radius) !important;
+        box-shadow: 0 4px 20px rgba(255, 107, 53, 0.4);
+        transition: var(--transition-bounce) !important;
+        font-size: 0.9rem !important;
+        border: none;
+      }
+
+      .btn-nav-cta:hover {
+        transform: translateY(-2px) scale(1.04) !important;
+        box-shadow: var(--shadow-glow) !important;
+      }
+
+      .btn-nav-cta:active {
+        transform: scale(0.97) !important;
+      }
+
+      .fm-navbar .navbar-toggler {
+        border: 1.5px solid rgba(255, 255, 255, 0.25);
+        padding: 0.4rem 0.6rem;
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.08);
+        color: white;
+      }
+
+      .fm-navbar .navbar-toggler:focus {
+        box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.35);
+      }
+
+      /* Mobile nav collapse */
+      @media (max-width: 991.98px) {
+        .fm-navbar .navbar-collapse {
+          background: rgba(10, 10, 18, 0.97);
+          backdrop-filter: blur(20px);
+          border-radius: 16px;
+          margin-top: 0.75rem;
+          padding: 1rem 1.25rem;
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .fm-navbar .nav-link {
+          padding: 0.6rem 0.75rem !important;
+          border-radius: 10px;
+          margin-bottom: 2px;
+        }
+      }
+
+      /* ─────────────────────────────────────────
+         HERO SECTION
+      ───────────────────────────────────────── */
+      .hero-section {
+        position: relative;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        overflow: hidden;
+      }
+
+      /* Hero background image */
+      .hero-bg {
+        position: absolute;
+        inset: 0;
+        background-image: url("https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=1920&q=80&auto=format&fit=crop");
+        background-size: cover;
+        background-position: center 30%;
+        background-attachment: fixed;
+        z-index: 0;
+        transform: scale(1.05);
+        animation: heroZoom 20s ease-in-out infinite alternate;
+      }
+
+      @keyframes heroZoom {
+        0% { transform: scale(1.05); }
+        100% { transform: scale(1.12); }
+      }
+
+      /* Overlay gradient */
+      .hero-overlay {
+        position: absolute;
+        inset: 0;
+        background: var(--gradient-hero);
+        z-index: 1;
+      }
+
+      /* Decorative orbs */
+      .hero-orb {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(80px);
+        opacity: 0.2;
+        z-index: 1;
+        animation: orbPulse 8s ease-in-out infinite alternate;
+      }
+
+      .hero-orb-1 {
+        width: 500px;
+        height: 500px;
+        background: radial-gradient(circle, #ff6b35, transparent);
+        top: -150px;
+        right: -100px;
+        animation-duration: 10s;
+      }
+
+      .hero-orb-2 {
+        width: 350px;
+        height: 350px;
+        background: radial-gradient(circle, #ffd166, transparent);
+        bottom: 50px;
+        left: -100px;
+        animation-duration: 13s;
+        animation-delay: 2s;
+      }
+
+      .hero-orb-3 {
+        width: 280px;
+        height: 280px;
+        background: radial-gradient(circle, #06d6a0, transparent);
+        top: 40%;
+        right: 20%;
+        animation-duration: 9s;
+        animation-delay: 4s;
+      }
+
+      @keyframes orbPulse {
+        0% { transform: scale(1) translate(0, 0); opacity: 0.15; }
+        100% { transform: scale(1.3) translate(30px, -20px); opacity: 0.25; }
+      }
+
+      /* Hero content */
+      .hero-content {
+        position: relative;
+        z-index: 2;
+        padding-top: 80px;
+      }
+
+      .hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: rgba(255, 255, 255, 0.12);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+        color: var(--brand-accent);
+        font-size: 0.82rem;
+        font-weight: 700;
+        padding: 0.45rem 1.1rem;
+        border-radius: 50px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        margin-bottom: 1.5rem;
+        animation: fadeInDown 0.8s ease both;
+      }
+
+      .hero-badge .pulse-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--brand-accent2);
+        animation: pulseDot 1.5s ease-in-out infinite;
+        flex-shrink: 0;
+      }
+
+      @keyframes pulseDot {
+        0%, 100% { box-shadow: 0 0 0 0 rgba(6, 214, 160, 0.6); }
+        50% { box-shadow: 0 0 0 6px rgba(6, 214, 160, 0); }
+      }
+
+      .hero-title {
+        font-family: var(--font-display);
+        font-size: clamp(2.8rem, 6vw, 5.5rem);
+        font-weight: 900;
+        color: white;
+        line-height: 1.08;
+        letter-spacing: -0.03em;
+        animation: fadeInUp 0.9s ease 0.1s both;
+        margin-bottom: 1.5rem;
+      }
+
+      .hero-title .highlight {
+        background: var(--gradient-brand);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        display: inline-block;
+        position: relative;
+      }
+
+      .hero-title .script-text {
+        font-family: var(--font-script);
+        font-size: 1.1em;
+        background: linear-gradient(135deg, #ffd166, #ff6b35);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        display: inline-block;
+      }
+
+      .hero-subtitle {
+        color: rgba(255, 255, 255, 0.75);
+        font-size: 1.1rem;
+        line-height: 1.75;
+        max-width: 520px;
+        animation: fadeInUp 0.9s ease 0.2s both;
+        margin-bottom: 2.5rem;
+      }
+
+      .hero-cta-group {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+        animation: fadeInUp 0.9s ease 0.3s both;
+        margin-bottom: 3rem;
+      }
+
+      .btn-hero-primary {
+        background: var(--gradient-brand);
+        color: white;
+        font-weight: 700;
+        font-size: 1rem;
+        padding: 0.85rem 2.2rem;
+        border-radius: var(--btn-radius);
+        border: none;
+        cursor: pointer;
+        box-shadow: 0 8px 30px rgba(255, 107, 53, 0.45);
+        transition: var(--transition-bounce);
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        position: relative;
+        overflow: hidden;
+        text-decoration: none;
+      }
+
+      .btn-hero-primary::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(135deg, rgba(255,255,255,0.2), transparent);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+
+      .btn-hero-primary:hover {
+        transform: translateY(-4px) scale(1.04);
+        box-shadow: var(--shadow-glow);
+        color: white;
+      }
+
+      .btn-hero-primary:hover::before {
+        opacity: 1;
+      }
+
+      .btn-hero-primary:active {
+        transform: scale(0.97);
+      }
+
+      .btn-hero-outline {
+        color: white;
+        font-weight: 600;
+        font-size: 1rem;
+        padding: 0.82rem 2rem;
+        border-radius: var(--btn-radius);
+        border: 1.5px solid rgba(255, 255, 255, 0.35);
+        background: rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(8px);
+        cursor: pointer;
+        transition: var(--transition-smooth);
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        text-decoration: none;
+      }
+
+      .btn-hero-outline:hover {
+        background: rgba(255, 255, 255, 0.18);
+        border-color: rgba(255, 255, 255, 0.6);
+        color: white;
+        transform: translateY(-2px);
+      }
+
+      /* Hero stats */
+      .hero-stats {
+        display: flex;
+        gap: 2rem;
+        animation: fadeInUp 0.9s ease 0.4s both;
+        flex-wrap: wrap;
+      }
+
+      .hero-stat-item {
+        text-align: left;
+      }
+
+      .hero-stat-value {
+        font-size: 1.9rem;
+        font-weight: 800;
+        color: white;
+        line-height: 1;
+        margin-bottom: 2px;
+      }
+
+      .hero-stat-value span {
+        background: var(--gradient-brand);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .hero-stat-label {
+        font-size: 0.78rem;
+        color: rgba(255, 255, 255, 0.55);
+        font-weight: 500;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+
+      .hero-stat-divider {
+        width: 1px;
+        background: rgba(255, 255, 255, 0.15);
+        align-self: stretch;
+      }
+
+      /* Hero right: glassmorphism cards */
+      .hero-right {
+        position: relative;
+        z-index: 2;
+        animation: fadeInRight 1s ease 0.2s both;
+      }
+
+      .hero-glass-card {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        backdrop-filter: blur(20px) saturate(1.5);
+        -webkit-backdrop-filter: blur(20px) saturate(1.5);
+        border-radius: 20px;
+        padding: 1.5rem;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+        transition: var(--transition-smooth);
+      }
+
+      .hero-glass-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+      }
+
+      .hero-food-showcase {
+        border-radius: 24px;
+        overflow: hidden;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+        position: relative;
+      }
+
+      .hero-food-showcase img {
+        width: 100%;
+        height: 380px;
+        object-fit: cover;
+        transition: transform 0.6s ease;
+      }
+
+      .hero-food-showcase:hover img {
+        transform: scale(1.06);
+      }
+
+      .showcase-badge {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        background: var(--gradient-brand);
+        color: white;
+        font-size: 0.75rem;
+        font-weight: 700;
+        padding: 0.4rem 1rem;
+        border-radius: 50px;
+        box-shadow: 0 4px 15px rgba(255, 107, 53, 0.4);
+        letter-spacing: 0.05em;
+      }
+
+      .floating-mini-card {
+        position: absolute;
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 16px;
+        padding: 0.85rem 1.1rem;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        min-width: 170px;
+        animation: floatCard 4s ease-in-out infinite alternate;
+      }
+
+      .floating-mini-card-1 {
+        bottom: -20px;
+        left: -30px;
+        animation-duration: 3.5s;
+      }
+
+      .floating-mini-card-2 {
+        top: 40px;
+        left: -40px;
+        animation-duration: 4.5s;
+        animation-delay: 1s;
+      }
+
+      @keyframes floatCard {
+        0% { transform: translateY(0px) rotate(-1deg); }
+        100% { transform: translateY(-12px) rotate(1deg); }
+      }
+
+      .mini-card-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.1rem;
+        flex-shrink: 0;
+      }
+
+      .mini-card-label {
+        font-size: 0.72rem;
+        color: #718096;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
+      .mini-card-value {
+        font-size: 0.95rem;
+        font-weight: 800;
+        color: #1a202c;
+        line-height: 1.2;
+      }
+
+      /* Scroll cue */
+      .hero-scroll-cue {
+        position: absolute;
+        bottom: 2rem;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 3;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.4rem;
+        color: rgba(255, 255, 255, 0.5);
+        font-size: 0.75rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        animation: fadeInUp 1s ease 1s both;
+        cursor: pointer;
+        transition: color 0.3s ease;
+      }
+
+      .hero-scroll-cue:hover {
+        color: rgba(255, 255, 255, 0.9);
+      }
+
+      .scroll-mouse {
+        width: 24px;
+        height: 38px;
+        border: 2px solid rgba(255, 255, 255, 0.4);
+        border-radius: 12px;
+        display: flex;
+        justify-content: center;
+        padding-top: 6px;
+      }
+
+      .scroll-wheel {
+        width: 3px;
+        height: 8px;
+        background: rgba(255, 255, 255, 0.6);
+        border-radius: 2px;
+        animation: scrollWheel 1.8s ease-in-out infinite;
+      }
+
+      @keyframes scrollWheel {
+        0% { transform: translateY(0); opacity: 1; }
+        80% { transform: translateY(12px); opacity: 0; }
+        100% { transform: translateY(0); opacity: 0; }
+      }
+
+      /* ─────────────────────────────────────────
+         FEATURES BAR (Why us)
+      ───────────────────────────────────────── */
+      .features-bar {
+        background: white;
+        padding: 2rem 0;
+        position: relative;
+        z-index: 10;
+        border-bottom: 1px solid #f0f0f0;
+        box-shadow: 0 -4px 20px rgba(0,0,0,0.06);
+      }
+
+      .feature-item {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 0.5rem 1.5rem;
+        border-right: 1px solid #f0f0f0;
+      }
+
+      .feature-item:last-child {
+        border-right: none;
+      }
+
+      .feature-icon-wrap {
+        width: 48px;
+        height: 48px;
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.3rem;
+        flex-shrink: 0;
+        transition: var(--transition-bounce);
+      }
+
+      .feature-item:hover .feature-icon-wrap {
+        transform: rotate(-5deg) scale(1.1);
+      }
+
+      .feature-title {
+        font-weight: 700;
+        font-size: 0.9rem;
+        color: #1a202c;
+        margin-bottom: 2px;
+      }
+
+      .feature-desc {
+        font-size: 0.78rem;
+        color: #718096;
+        font-weight: 500;
+      }
+
+      /* ─────────────────────────────────────────
+         MAIN MENU SECTION
+      ───────────────────────────────────────── */
+      .menu-section {
+        background: #f7f8fc;
+        padding: 5rem 0 4rem;
+        position: relative;
+        z-index: 10;
+      }
+
+      .section-eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.78rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--brand-primary);
+        background: rgba(255, 107, 53, 0.1);
+        padding: 0.4rem 1rem;
+        border-radius: 50px;
+        margin-bottom: 0.85rem;
+      }
+
+      .section-title {
+        font-family: var(--font-display);
+        font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+        font-weight: 800;
+        color: #1a1a2e;
+        line-height: 1.2;
+        letter-spacing: -0.02em;
+        margin-bottom: 0.75rem;
+      }
+
+      .section-title .gradient-text {
+        background: var(--gradient-brand);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .section-desc {
+        color: #718096;
+        font-size: 1rem;
+        line-height: 1.7;
+        max-width: 500px;
+      }
+
+      /* ─────────────────────────────────────────
+         SEARCH BAR (id="searchMenu" PRESERVED)
+      ───────────────────────────────────────── */
+      .fm-search-wrap {
+        position: relative;
+        max-width: 600px;
+        margin: 0 auto 2.5rem;
+      }
+
+      .fm-search-wrap .search-icon {
+        position: absolute;
+        left: 1.25rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--brand-primary);
+        font-size: 1.15rem;
+        z-index: 2;
+        pointer-events: none;
+      }
+
+      /* ← id="searchMenu" PRESERVED */
+      #searchMenu {
+        width: 100%;
+        padding: 1rem 1.5rem 1rem 3.2rem;
+        border-radius: 50px;
+        border: 2px solid transparent;
+        background: white;
+        font-family: var(--font-main);
+        font-size: 0.97rem;
+        font-weight: 500;
+        color: #1a1a2e;
+        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.09);
+        transition: var(--transition-smooth);
+        outline: none;
+        background-image: none;
+      }
+
+      #searchMenu:focus {
+        border-color: var(--brand-primary);
+        box-shadow: 0 4px 24px rgba(255, 107, 53, 0.2),
+          0 0 0 4px rgba(255, 107, 53, 0.1);
+        transform: translateY(-2px);
+      }
+
+      #searchMenu::placeholder {
+        color: #b0b8c8;
+        font-weight: 400;
+      }
+
+      .fm-search-wrap .search-shortcut {
+        position: absolute;
+        right: 1.25rem;
+        top: 50%;
+        transform: translateY(-50%);
+        background: #f0f2f5;
+        color: #94a3b8;
+        font-size: 0.72rem;
+        font-weight: 600;
+        padding: 0.25rem 0.6rem;
+        border-radius: 6px;
+        letter-spacing: 0.04em;
+        pointer-events: none;
+      }
+
+      /* ─────────────────────────────────────────
+         CATEGORY FILTER (class="btn-category" PRESERVED)
+      ───────────────────────────────────────── */
+
+      /* id="categoryList" PRESERVED */
+      #categoryList {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.6rem;
+        justify-content: center;
+        margin-bottom: 2.5rem;
+        padding: 0;
+        list-style: none;
+      }
+
+      /* class="btn-category" PRESERVED */
+      .btn-category {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
+        padding: 0.55rem 1.3rem;
+        border-radius: var(--btn-radius);
+        border: 2px solid #e8ecf0;
+        background: white;
+        color: #4a5568;
+        font-family: var(--font-main);
+        font-size: 0.875rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: var(--transition-bounce);
+        white-space: nowrap;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .btn-category::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: var(--gradient-brand);
+        opacity: 0;
+        transition: opacity 0.25s ease;
+      }
+
+      .btn-category span,
+      .btn-category i {
+        position: relative;
+        z-index: 1;
+      }
+
+      .btn-category:hover {
+        border-color: var(--brand-primary);
+        color: var(--brand-primary);
+        transform: translateY(-3px);
+        box-shadow: 0 8px 24px rgba(255, 107, 53, 0.2);
+      }
+
+      .btn-category.active {
+        background: var(--gradient-brand);
+        border-color: transparent;
+        color: white !important;
+        box-shadow: 0 8px 24px rgba(255, 107, 53, 0.4);
+        transform: translateY(-2px);
+      }
+
+      .btn-category.active::before {
+        opacity: 1;
+      }
+
+      /* ─────────────────────────────────────────
+         TOOLBAR: SORT + COUNT
+      ───────────────────────────────────────── */
+      .menu-toolbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        margin-bottom: 2rem;
+        flex-wrap: wrap;
+      }
+
+      .toolbar-count {
+        font-size: 0.9rem;
+        color: #718096;
+        font-weight: 500;
+      }
+
+      .toolbar-count strong {
+        color: var(--brand-primary);
+        font-weight: 800;
+        font-size: 1.1rem;
+      }
+
+      /* id="sortPrice" PRESERVED */
+      .sort-wrap {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        background: white;
+        border: 2px solid #e8ecf0;
+        border-radius: 50px;
+        padding: 0.4rem 0.5rem 0.4rem 1rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        transition: var(--transition-smooth);
+      }
+
+      .sort-wrap:focus-within {
+        border-color: var(--brand-primary);
+        box-shadow: 0 4px 16px rgba(255,107,53,0.15);
+      }
+
+      .sort-wrap label {
+        font-size: 0.82rem;
+        font-weight: 600;
+        color: #718096;
+        white-space: nowrap;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+      }
+
+      #sortPrice {
+        border: none;
+        background: transparent;
+        font-family: var(--font-main);
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: #1a202c;
+        cursor: pointer;
+        outline: none;
+        appearance: none;
+        padding-right: 1.4rem;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23718096' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 0 center;
+      }
+
+      /* ─────────────────────────────────────────
+         DISHES CONTAINER (id="dishesContainer" PRESERVED)
+      ───────────────────────────────────────── */
+
+      /* id="dishesContainer" PRESERVED */
+      #dishesContainer {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 1.75rem;
+      }
+
+      /* ─────────────────────────────────────────
+         DISH CARD (Tổng quát — JS sẽ inject)
+      ───────────────────────────────────────── */
+      .dish-card-wrapper {
+        border-radius: var(--card-radius);
+        overflow: hidden;
+        background: white;
+        box-shadow: var(--shadow-card);
+        transition: var(--transition-smooth);
+        cursor: pointer;
+        position: relative;
+        border: 1px solid rgba(0, 0, 0, 0.04);
+      }
+
+      .dish-card-wrapper:hover {
+        transform: translateY(-10px) scale(1.01);
+        box-shadow: var(--shadow-card-hover);
+        border-color: rgba(255, 107, 53, 0.15);
+      }
+
+      .dish-card-wrapper .dish-img-wrap {
+        position: relative;
+        overflow: hidden;
+        aspect-ratio: 4 / 3;
+        background: #f5f5f5;
+      }
+
+      .dish-card-wrapper .dish-img-wrap img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      }
+
+      .dish-card-wrapper:hover .dish-img-wrap img {
+        transform: scale(1.1);
+      }
+
+      .dish-card-wrapper .dish-body {
+        padding: 1.25rem;
+      }
+
+      .dish-card-wrapper .dish-name {
+        font-family: var(--font-display);
+        font-size: 1.05rem;
+        font-weight: 700;
+        color: #1a1a2e;
+        margin-bottom: 0.4rem;
+        line-height: 1.3;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+
+      .dish-card-wrapper .dish-category-tag {
+        font-size: 0.72rem;
+        font-weight: 700;
+        color: var(--brand-primary);
+        background: rgba(255, 107, 53, 0.1);
+        padding: 0.2rem 0.7rem;
+        border-radius: 50px;
+        display: inline-block;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        margin-bottom: 0.6rem;
+      }
+
+      .dish-card-wrapper .dish-desc {
+        font-size: 0.82rem;
+        color: #94a3b8;
+        line-height: 1.55;
+        margin-bottom: 1rem;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+
+      .dish-card-wrapper .dish-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.5rem;
+        border-top: 1px solid #f5f5f5;
+        padding-top: 1rem;
+      }
+
+      .dish-card-wrapper .dish-price {
+        font-size: 1.2rem;
+        font-weight: 800;
+        color: var(--brand-primary);
+        letter-spacing: -0.02em;
+      }
+
+      .btn-dish-detail {
+        background: var(--gradient-brand);
+        color: white;
+        border: none;
+        border-radius: 50px;
+        padding: 0.45rem 1.1rem;
+        font-size: 0.8rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: var(--transition-bounce);
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        box-shadow: 0 4px 14px rgba(255, 107, 53, 0.35);
+        white-space: nowrap;
+      }
+
+      .btn-dish-detail:hover {
+        transform: translateY(-2px) scale(1.06);
+        box-shadow: var(--shadow-glow);
+        color: white;
+      }
+
+      .btn-dish-detail:active {
+        transform: scale(0.95);
+      }
+
+      /* Status badge on card */
+      .dish-status-badge {
+        position: absolute;
+        top: 0.9rem;
+        right: 0.9rem;
+        padding: 0.3rem 0.8rem;
+        border-radius: 50px;
+        font-size: 0.7rem;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        z-index: 2;
+      }
+
+      .dish-status-badge.available {
+        background: rgba(6, 214, 160, 0.9);
+        color: white;
+      }
+
+      .dish-status-badge.unavailable {
+        background: rgba(239, 68, 68, 0.88);
+        color: white;
+      }
+
+      /* Sold-out overlay */
+      .dish-soldout-overlay {
+        position: absolute;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.55);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 3;
+        backdrop-filter: blur(2px);
+      }
+
+      .dish-soldout-overlay span {
+        background: rgba(239, 68, 68, 0.9);
+        color: white;
+        font-weight: 800;
+        font-size: 0.85rem;
+        padding: 0.5rem 1.25rem;
+        border-radius: 50px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        border: 2px solid rgba(255,255,255,0.3);
+      }
+
+      /* Cat badge on card (top-left) */
+      .dish-cat-label {
+        position: absolute;
+        top: 0.9rem;
+        left: 0.9rem;
+        z-index: 2;
+        background: rgba(255, 255, 255, 0.92);
+        color: #1a1a2e;
+        font-size: 0.68rem;
+        font-weight: 700;
+        padding: 0.25rem 0.7rem;
+        border-radius: 50px;
+        backdrop-filter: blur(6px);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+
+      /* ─────────────────────────────────────────
+         LOADING & EMPTY STATES
+      ───────────────────────────────────────── */
+      .fm-loading-state {
+        grid-column: 1 / -1;
+        text-align: center;
+        padding: 4rem 1rem;
+        color: #94a3b8;
+      }
+
+      .loading-spinner {
+        width: 52px;
+        height: 52px;
+        border: 4px solid #f0f0f0;
+        border-top-color: var(--brand-primary);
+        border-radius: 50%;
+        animation: spin 0.75s linear infinite;
+        margin: 0 auto 1rem;
+      }
+
+      @keyframes spin {
+        to { transform: rotate(360deg); }
+      }
+
+      .fm-empty-state {
+        grid-column: 1 / -1;
+        text-align: center;
+        padding: 4rem 1rem;
+      }
+
+      .fm-empty-state .empty-icon {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+        display: block;
+        animation: wobble 3s ease-in-out infinite;
+      }
+
+      @keyframes wobble {
+        0%, 100% { transform: rotate(-5deg); }
+        50% { transform: rotate(5deg); }
+      }
+
+      /* ─────────────────────────────────────────
+         DISH DETAIL MODAL (id="dishDetailModal" PRESERVED)
+      ───────────────────────────────────────── */
+
+      /* id="dishDetailModal" PRESERVED */
+      #dishDetailModal .modal-dialog {
+        max-width: 860px;
+      }
+
+      #dishDetailModal .modal-content {
+        border: none;
+        border-radius: 24px;
+        overflow: hidden;
+        box-shadow: 0 30px 80px rgba(0, 0, 0, 0.35);
+        background: white;
+      }
+
+      #dishDetailModal .modal-header {
+        background: var(--gradient-brand);
+        border: none;
+        padding: 1.25rem 1.75rem;
+        position: relative;
+        overflow: hidden;
+      }
+
+      #dishDetailModal .modal-header::before {
+        content: "";
+        position: absolute;
+        top: -50%;
+        right: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle at center, rgba(255,255,255,0.1) 0%, transparent 60%);
+        pointer-events: none;
+      }
+
+      #dishDetailModal .modal-title {
+        color: white;
+        font-family: var(--font-display);
+        font-weight: 800;
+        font-size: 1.2rem;
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+      }
+
+      #dishDetailModal .btn-close {
+        filter: brightness(0) invert(1);
+        opacity: 0.8;
+        transition: var(--transition-smooth);
+      }
+
+      #dishDetailModal .btn-close:hover {
+        opacity: 1;
+        transform: rotate(90deg) scale(1.1);
+      }
+
+      #dishDetailModal .modal-body {
+        padding: 0;
+      }
+
+      /* id="modalDishImg" PRESERVED */
+      #modalDishImg {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+        min-height: 300px;
+        display: block;
+      }
+
+      .modal-img-col {
+        overflow: hidden;
+        position: relative;
+        background: #f0f0f0;
+      }
+
+      .modal-img-col:hover #modalDishImg {
+        transform: scale(1.05);
+      }
+
+      .modal-img-gradient {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 120px;
+        background: linear-gradient(to top, rgba(0,0,0,0.4), transparent);
+        pointer-events: none;
+      }
+
+      .modal-info-col {
+        padding: 2rem 2.25rem 2rem;
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* id="modalDishCategory" PRESERVED */
+      #modalDishCategory {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        background: rgba(255, 107, 53, 0.1);
+        color: var(--brand-primary);
+        font-size: 0.75rem;
+        font-weight: 700;
+        padding: 0.35rem 1rem;
+        border-radius: 50px;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        margin-bottom: 0.85rem;
+      }
+
+      /* id="modalDishName" PRESERVED */
+      #modalDishName {
+        font-family: var(--font-display);
+        font-size: 1.8rem;
+        font-weight: 800;
+        color: #1a1a2e;
+        line-height: 1.2;
+        margin-bottom: 0.6rem;
+        letter-spacing: -0.02em;
+      }
+
+      /* id="modalDishPrice" PRESERVED */
+      #modalDishPrice {
+        font-size: 1.75rem;
+        font-weight: 900;
+        background: var(--gradient-brand);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        display: inline-block;
+        margin-bottom: 1rem;
+        letter-spacing: -0.03em;
+        line-height: 1;
+      }
+
+      .modal-divider {
+        height: 1px;
+        background: linear-gradient(90deg, transparent, #e8ecf0, transparent);
+        margin: 1rem 0;
+      }
+
+      /* id="modalDishDesc" PRESERVED */
+      #modalDishDesc {
+        color: #64748b;
+        font-size: 0.95rem;
+        line-height: 1.75;
+        flex-grow: 1;
+        margin-bottom: 1.25rem;
+      }
+
+      /* id="modalDishStatus" PRESERVED */
+      #modalDishStatus {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1.25rem;
+        border-radius: 50px;
+        font-size: 0.82rem;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+      }
+
+      .modal-status-wrap {
+        margin-bottom: 1.5rem;
+      }
+
+      .modal-action-row {
+        display: flex;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+      }
+
+      .btn-modal-order {
+        flex: 1;
+        background: var(--gradient-brand);
+        color: white;
+        border: none;
+        border-radius: var(--btn-radius);
+        padding: 0.8rem 1.5rem;
+        font-family: var(--font-main);
+        font-size: 0.95rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: var(--transition-bounce);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        box-shadow: 0 6px 20px rgba(255,107,53,0.35);
+        min-width: 150px;
+      }
+
+      .btn-modal-order:hover {
+        transform: translateY(-3px);
+        box-shadow: var(--shadow-glow);
+      }
+
+      .btn-modal-close {
+        background: white;
+        color: #4a5568;
+        border: 2px solid #e8ecf0;
+        border-radius: var(--btn-radius);
+        padding: 0.78rem 1.25rem;
+        font-family: var(--font-main);
+        font-size: 0.9rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: var(--transition-smooth);
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+      }
+
+      .btn-modal-close:hover {
+        border-color: #94a3b8;
+        background: #f8fafc;
+      }
+
+      #dishDetailModal .modal-footer {
+        display: none;
+      }
+
+      /* Modal backdrop blur */
+      .modal-backdrop.show {
+        backdrop-filter: blur(6px);
+        -webkit-backdrop-filter: blur(6px);
+        background-color: rgba(0, 0, 0, 0.6);
+      }
+
+      /* ─────────────────────────────────────────
+         TOAST CONTAINER (id="toastContainer" PRESERVED)
+      ───────────────────────────────────────── */
+
+      /* id="toastContainer" PRESERVED */
+      #toastContainer {
+        position: fixed;
+        top: 1.25rem;
+        right: 1.25rem;
+        z-index: 99999;
+        display: flex;
+        flex-direction: column;
+        gap: 0.6rem;
+        pointer-events: none;
+      }
+
+      #toastContainer .toast {
+        pointer-events: all;
+        border-radius: 14px;
+        border: none;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+        backdrop-filter: blur(12px);
+        min-width: 300px;
+        overflow: hidden;
+      }
+
+      #toastContainer .toast-header {
+        border-bottom: none;
+        font-weight: 700;
+        font-size: 0.85rem;
+      }
+
+      #toastContainer .toast-body {
+        font-size: 0.875rem;
+        font-weight: 500;
+        padding-top: 0.25rem;
+      }
+
+      /* ─────────────────────────────────────────
+         PROMO SECTION
+      ───────────────────────────────────────── */
+      .promo-section {
+        background: var(--gradient-dark);
+        padding: 5rem 0;
+        position: relative;
+        overflow: hidden;
+        z-index: 10;
+      }
+
+      .promo-section::before {
+        content: "";
+        position: absolute;
+        top: -100px;
+        right: -100px;
+        width: 400px;
+        height: 400px;
+        background: radial-gradient(circle, rgba(255,107,53,0.15), transparent 70%);
+        pointer-events: none;
+      }
+
+      .promo-section::after {
+        content: "";
+        position: absolute;
+        bottom: -80px;
+        left: -80px;
+        width: 300px;
+        height: 300px;
+        background: radial-gradient(circle, rgba(255,209,102,0.1), transparent 70%);
+        pointer-events: none;
+      }
+
+      .promo-card {
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 20px;
+        padding: 2rem;
+        text-align: center;
+        color: white;
+        transition: var(--transition-smooth);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        height: 100%;
+      }
+
+      .promo-card:hover {
+        background: rgba(255, 255, 255, 0.1);
+        transform: translateY(-6px);
+        box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+        border-color: rgba(255,255,255,0.2);
+      }
+
+      .promo-card-icon {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        display: block;
+        transition: var(--transition-bounce);
+      }
+
+      .promo-card:hover .promo-card-icon {
+        transform: scale(1.2) rotate(-5deg);
+      }
+
+      .promo-card h4 {
+        font-family: var(--font-display);
+        font-size: 1.15rem;
+        font-weight: 700;
+        margin-bottom: 0.6rem;
+        color: white;
+      }
+
+      .promo-card p {
+        font-size: 0.875rem;
+        color: rgba(255,255,255,0.65);
+        line-height: 1.65;
+        margin: 0;
+      }
+
+      /* ─────────────────────────────────────────
+         FOOTER
+      ───────────────────────────────────────── */
+      .fm-footer {
+        background: #050508;
+        color: rgba(255, 255, 255, 0.7);
+        padding: 4rem 0 0;
+        position: relative;
+        z-index: 10;
+        border-top: 1px solid rgba(255,255,255,0.06);
+      }
+
+      .footer-brand-name {
+        font-family: var(--font-display);
+        font-size: 1.7rem;
+        font-weight: 900;
+        color: white;
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        margin-bottom: 1rem;
+        letter-spacing: -0.02em;
+      }
+
+      .footer-brand-badge {
+        background: var(--gradient-brand);
+        color: white;
+        font-size: 0.6rem;
+        font-weight: 800;
+        padding: 0.2rem 0.55rem;
+        border-radius: 50px;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        align-self: flex-start;
+        margin-top: 0.3rem;
+      }
+
+      .footer-tagline {
+        font-family: var(--font-script);
+        font-size: 1.05rem;
+        color: var(--brand-accent);
+        margin-bottom: 1.25rem;
+      }
+
+      .footer-desc {
+        font-size: 0.875rem;
+        line-height: 1.8;
+        color: rgba(255,255,255,0.5);
+        max-width: 300px;
+        margin-bottom: 1.75rem;
+      }
+
+      .footer-social {
+        display: flex;
+        gap: 0.65rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .social-btn {
+        width: 40px;
+        height: 40px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
+        transition: var(--transition-bounce);
+        border: 1px solid rgba(255,255,255,0.1);
+        color: rgba(255,255,255,0.65);
+        background: rgba(255,255,255,0.05);
+        text-decoration: none;
+        flex-shrink: 0;
+      }
+
+      .social-btn:hover {
+        transform: translateY(-4px) scale(1.1);
+        color: white;
+        border-color: rgba(255,255,255,0.3);
+      }
+
+      .social-btn.fb:hover { background: #1877f2; border-color: #1877f2; }
+      .social-btn.tt:hover { background: #000; border-color: #333; }
+      .social-btn.ig:hover {
+        background: linear-gradient(135deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+        border-color: transparent;
+      }
+
+      .footer-heading {
+        font-size: 0.75rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        color: rgba(255,255,255,0.4);
+        margin-bottom: 1.25rem;
+      }
+
+      .footer-links {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 0.6rem;
+      }
+
+      .footer-links a {
+        color: rgba(255,255,255,0.55);
+        font-size: 0.875rem;
+        font-weight: 500;
+        transition: var(--transition-smooth);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        text-decoration: none;
+      }
+
+      .footer-links a:hover {
+        color: var(--brand-primary);
+        transform: translateX(4px);
+      }
+
+      .footer-links a i {
+        font-size: 0.75rem;
+        opacity: 0.6;
+        flex-shrink: 0;
+      }
+
+      .footer-contact-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.75rem;
+        margin-bottom: 0.85rem;
+        font-size: 0.875rem;
+      }
+
+      .footer-contact-item .contact-icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 9px;
+        background: rgba(255,107,53,0.15);
+        color: var(--brand-primary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.85rem;
+        flex-shrink: 0;
+        margin-top: 1px;
+      }
+
+      .footer-contact-item .contact-label {
+        font-size: 0.7rem;
+        color: rgba(255,255,255,0.35);
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        display: block;
+        margin-bottom: 2px;
+      }
+
+      .footer-contact-item .contact-value {
+        color: rgba(255,255,255,0.8);
+        font-weight: 600;
+      }
+
+      .footer-contact-item a.contact-value {
+        color: rgba(255,255,255,0.8);
+        text-decoration: none;
+        transition: color 0.2s ease;
+      }
+
+      .footer-contact-item a.contact-value:hover {
+        color: var(--brand-primary);
+      }
+
+      .footer-divider {
+        border: none;
+        border-top: 1px solid rgba(255,255,255,0.06);
+        margin: 2.5rem 0 0;
+      }
+
+      .footer-bottom {
+        padding: 1.25rem 0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        flex-wrap: wrap;
+      }
+
+      .footer-bottom-text {
+        font-size: 0.8rem;
+        color: rgba(255,255,255,0.3);
+      }
+
+      .footer-bottom-text strong {
+        color: var(--brand-primary);
+      }
+
+      .footer-bottom-badge {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.78rem;
+        color: rgba(255,255,255,0.25);
+      }
+
+      .footer-bottom-badge span {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+        background: rgba(255,255,255,0.05);
+        padding: 0.25rem 0.65rem;
+        border-radius: 50px;
+        border: 1px solid rgba(255,255,255,0.07);
+      }
+
+      /* ─────────────────────────────────────────
+         SCROLL TO TOP
+      ───────────────────────────────────────── */
+      #scrollToTopBtn {
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        z-index: 9999;
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background: var(--gradient-brand);
+        color: white;
+        border: none;
+        cursor: pointer;
+        box-shadow: 0 6px 24px rgba(255,107,53,0.45);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.1rem;
+        opacity: 0;
+        transform: translateY(20px);
+        transition: var(--transition-smooth);
+        pointer-events: none;
+      }
+
+      #scrollToTopBtn.visible {
+        opacity: 1;
+        transform: translateY(0);
+        pointer-events: auto;
+      }
+
+      #scrollToTopBtn:hover {
+        transform: translateY(-4px) scale(1.08);
+        box-shadow: var(--shadow-glow);
+      }
+
+      /* ─────────────────────────────────────────
+         SECTION SEPARATOR
+      ───────────────────────────────────────── */
+      .wave-sep {
+        display: block;
+        width: 100%;
+        line-height: 0;
+        position: relative;
+        z-index: 5;
+      }
+
+      /* ─────────────────────────────────────────
+         KEYFRAME ANIMATIONS
+      ───────────────────────────────────────── */
+      @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(30px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+
+      @keyframes fadeInDown {
+        from { opacity: 0; transform: translateY(-20px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+
+      @keyframes fadeInRight {
+        from { opacity: 0; transform: translateX(40px); }
+        to { opacity: 1; transform: translateX(0); }
+      }
+
+      /* ─────────────────────────────────────────
+         RIPPLE EFFECT (buttons)
+      ───────────────────────────────────────── */
+      .ripple-btn {
+        position: relative;
+        overflow: hidden;
+      }
+
+      .ripple-btn .ripple {
+        position: absolute;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.35);
+        transform: scale(0);
+        animation: rippleAnim 0.55s linear;
+        pointer-events: none;
+      }
+
+      @keyframes rippleAnim {
+        to { transform: scale(4); opacity: 0; }
+      }
+
+      /* ─────────────────────────────────────────
+         RESPONSIVE OVERRIDES
+      ───────────────────────────────────────── */
+      @media (max-width: 991.98px) {
+        .hero-right {
+          display: none;
+        }
+
+        .hero-section {
+          min-height: 90vh;
+        }
+
+        .hero-content {
+          text-align: center;
+          padding-top: 100px;
+          padding-bottom: 4rem;
+        }
+
+        .hero-subtitle {
+          margin-left: auto;
+          margin-right: auto;
+        }
+
+        .hero-cta-group {
+          justify-content: center;
+        }
+
+        .hero-stats {
+          justify-content: center;
+        }
+
+        .feature-item {
+          border-right: none;
+          border-bottom: 1px solid #f0f0f0;
+          width: 100%;
+        }
+
+        .feature-item:last-child {
+          border-bottom: none;
+        }
+
+        #dishesContainer {
+          grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+          gap: 1.25rem;
+        }
+
+        .menu-section {
+          padding: 3.5rem 0 3rem;
+        }
+
+        #dishDetailModal .modal-dialog {
+          max-width: 95vw;
+          margin: 1rem auto;
+        }
+
+        .modal-info-col {
+          padding: 1.5rem;
+        }
+
+        #modalDishName {
+          font-size: 1.4rem;
+        }
+
+        #modalDishImg {
+          min-height: 220px;
+        }
+      }
+
+      @media (max-width: 575.98px) {
+        .hero-title {
+          font-size: 2.3rem;
+        }
+
+        .hero-stats {
+          gap: 1rem;
+        }
+
+        .hero-stat-divider {
+          display: none;
+        }
+
+        #dishesContainer {
+          grid-template-columns: 1fr;
+          gap: 1rem;
+        }
+
+        .section-title {
+          font-size: 1.6rem;
+        }
+
+        .fm-search-wrap {
+          margin-left: 0;
+          margin-right: 0;
+        }
+
+        .menu-toolbar {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        .hero-cta-group {
+          flex-direction: column;
+        }
+
+        .btn-hero-primary,
+        .btn-hero-outline {
+          width: 100%;
+          justify-content: center;
+        }
+
+        #scrollToTopBtn {
+          bottom: 1.25rem;
+          right: 1.25rem;
+          width: 42px;
+          height: 42px;
+          font-size: 1rem;
+        }
+
+        .floating-mini-card {
+          display: none;
+        }
+
+        .promo-section {
+          padding: 3rem 0;
+        }
+
+        #dishDetailModal .modal-dialog {
+          margin: 0;
+          max-width: 100vw;
+          align-items: flex-end;
+        }
+
+        #dishDetailModal .modal-content {
+          border-radius: 24px 24px 0 0;
+          max-height: 92dvh;
+          overflow-y: auto;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+
+    <!-- ═══════════════════════════════════════════
+         FLOATING FOOD ICONS BACKGROUND
+    ═══════════════════════════════════════════ -->
+    <div class="floating-food-bg" aria-hidden="true">
+      <span class="food-icon">🍔</span>
+      <span class="food-icon">🍕</span>
+      <span class="food-icon">🍟</span>
+      <span class="food-icon">🌭</span>
+      <span class="food-icon">🌮</span>
+      <span class="food-icon">🥤</span>
+      <span class="food-icon">☕</span>
+      <span class="food-icon">🍩</span>
+      <span class="food-icon">🍗</span>
+      <span class="food-icon">🍜</span>
+      <span class="food-icon">🍣</span>
+      <span class="food-icon">🧋</span>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         NAVBAR
+    ═══════════════════════════════════════════ -->
+    <nav
+      class="fm-navbar navbar navbar-expand-lg"
+      id="mainNavbar"
+      role="navigation"
+      aria-label="Điều hướng chính"
+    >
+      <div class="container">
+        <!-- Brand -->
+        <a class="navbar-brand" href="index.html" aria-label="FoodieMenu - Trang chủ">
+          <div class="brand-icon-wrap" aria-hidden="true">🍽️</div>
+          <span>
+            Foodie<span class="brand-accent">Menu</span>
+          </span>
+        </a>
+
+        <!-- Toggler -->
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#fmNavContent"
+          aria-controls="fmNavContent"
+          aria-expanded="false"
+          aria-label="Mở/đóng menu"
+        >
+          <i class="bi bi-list fs-4" aria-hidden="true"></i>
+        </button>
+
+        <!-- Nav Content -->
+        <div class="collapse navbar-collapse" id="fmNavContent">
+          <ul class="navbar-nav mx-auto mb-2 mb-lg-0 gap-1">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="index.html">
+                <i class="bi bi-house-door me-1" aria-hidden="true"></i>Trang Chủ
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#menu-section">
+                <i class="bi bi-grid-3x3-gap me-1" aria-hidden="true"></i>Thực Đơn
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#category-section">
+                <i class="bi bi-tags me-1" aria-hidden="true"></i>Danh Mục
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#contact-section">
+                <i class="bi bi-envelope me-1" aria-hidden="true"></i>Liên Hệ
+              </a>
+            </li>
+          </ul>
+
+          <div class="d-flex align-items-center gap-2">
+            <a href="admin/index.html" class="nav-link" style="color:rgba(255,255,255,0.55) !important; font-size:0.85rem;">
+              <i class="bi bi-shield-lock me-1" aria-hidden="true"></i>
+              <span class="d-none d-lg-inline">Admin</span>
+            </a>
+            <a href="#menu-section" class="btn-nav-cta nav-link" aria-label="Xem thực đơn ngay">
+              <i class="bi bi-egg-fried me-1" aria-hidden="true"></i>
+              Đặt Món Ngay
+            </a>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- ═══════════════════════════════════════════
+         HERO SECTION
+    ═══════════════════════════════════════════ -->
+    <section class="hero-section" aria-labelledby="heroHeading">
+      <!-- Background -->
+      <div class="hero-bg" role="img" aria-label="Hình nền nhà hàng cao cấp"></div>
+      <div class="hero-overlay" aria-hidden="true"></div>
+
+      <!-- Decorative orbs -->
+      <div class="hero-orb hero-orb-1" aria-hidden="true"></div>
+      <div class="hero-orb hero-orb-2" aria-hidden="true"></div>
+      <div class="hero-orb hero-orb-3" aria-hidden="true"></div>
+
+      <div class="container hero-content">
+        <div class="row align-items-center gy-5">
+          <!-- Left: Text Content -->
+          <div class="col-lg-7 col-xl-6">
+
+            <div class="hero-badge" role="status">
+              <span class="pulse-dot" aria-hidden="true"></span>
+              ✨ Đang Phục Vụ Hôm Nay
+            </div>
+
+            <h1 class="hero-title" id="heroHeading">
+              Thưởng Thức<br />
+              Ẩm Thực<br />
+              <span class="script-text">Đỉnh Cao</span>
+            </h1>
+
+            <p class="hero-subtitle">
+              Khám phá hàng trăm món ăn được chế biến tinh tế từ nguyên liệu tươi ngon nhất.
+              Mỗi món là một trải nghiệm hương vị độc đáo dành riêng cho bạn.
+            </p>
+
+            <div class="hero-cta-group">
+              <a href="#menu-section" class="btn-hero-primary ripple-btn" aria-label="Khám phá thực đơn">
+                <i class="bi bi-compass" aria-hidden="true"></i>
+                Khám Phá Thực Đơn
+              </a>
+              <a href="#contact-section" class="btn-hero-outline" aria-label="Đặt bàn ngay">
+                <i class="bi bi-telephone" aria-hidden="true"></i>
+                Đặt Bàn Ngay
+              </a>
+            </div>
+
+            <!-- Stats -->
+            <div class="hero-stats">
+              <div class="hero-stat-item">
+                <div class="hero-stat-value">
+                  <span id="totalDishes">100</span>+
+                </div>
+                <div class="hero-stat-label">Món Ăn</div>
+              </div>
+              <div class="hero-stat-divider" aria-hidden="true"></div>
+              <div class="hero-stat-item">
+                <div class="hero-stat-value"><span>50</span>+</div>
+                <div class="hero-stat-label">Danh Mục</div>
+              </div>
+              <div class="hero-stat-divider" aria-hidden="true"></div>
+              <div class="hero-stat-item">
+                <div class="hero-stat-value"><span>4.9</span>⭐</div>
+                <div class="hero-stat-label">Đánh Giá</div>
+              </div>
+              <div class="hero-stat-divider" aria-hidden="true"></div>
+              <div class="hero-stat-item">
+                <div class="hero-stat-value"><span>5K</span>+</div>
+                <div class="hero-stat-label">Khách Hàng</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right: Visual Cards -->
+          <div class="col-lg-5 col-xl-6 hero-right">
+            <div class="position-relative">
+              <!-- Main food image -->
+              <div class="hero-food-showcase">
+                <img
+                  src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=800&q=85&auto=format&fit=crop"
+                  alt="Món ăn cao cấp"
+                  loading="eager"
+                />
+                <span class="showcase-badge">
+                  ⭐ Top Món Hôm Nay
+                </span>
+                <div class="modal-img-gradient" aria-hidden="true"></div>
+              </div>
+
+              <!-- Floating mini card 1: Rating -->
+              <div class="floating-mini-card floating-mini-card-1" aria-hidden="true">
+                <div class="mini-card-icon" style="background: rgba(255,107,53,0.12);">🔥</div>
+                <div>
+                  <div class="mini-card-label">Hot Deal</div>
+                  <div class="mini-card-value">Giảm 20%</div>
+                </div>
+              </div>
+
+              <!-- Floating mini card 2: Orders -->
+              <div class="floating-mini-card floating-mini-card-2" aria-hidden="true">
+                <div class="mini-card-icon" style="background: rgba(6,214,160,0.12);">✅</div>
+                <div>
+                  <div class="mini-card-label">Hôm nay</div>
+                  <div class="mini-card-value">128 đơn</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Scroll cue -->
+      <a href="#features-bar" class="hero-scroll-cue" aria-label="Cuộn xuống">
+        <div class="scroll-mouse" aria-hidden="true">
+          <div class="scroll-wheel"></div>
+        </div>
+        <span>Cuộn xuống</span>
+      </a>
+    </section>
+
+    <!-- ═══════════════════════════════════════════
+         FEATURES BAR
+    ═══════════════════════════════════════════ -->
+    <section class="features-bar" id="features-bar" aria-label="Đặc điểm nổi bật">
+      <div class="container">
+        <div class="row g-0">
+          <div class="col-6 col-md-3">
+            <div class="feature-item reveal reveal-delay-1">
+              <div class="feature-icon-wrap" style="background: rgba(255,107,53,0.1);">
+                <span aria-hidden="true">⚡</span>
+              </div>
+              <div>
+                <div class="feature-title">Giao Hàng Nhanh</div>
+                <div class="feature-desc">Trong vòng 30 phút</div>
+              </div>
+            </div>
+          </div>
+          <div class="col-6 col-md-3">
+            <div class="feature-item reveal reveal-delay-2">
+              <div class="feature-icon-wrap" style="background: rgba(6,214,160,0.1);">
+                <span aria-hidden="true">🌿</span>
+              </div>
+              <div>
+                <div class="feature-title">Nguyên Liệu Sạch</div>
+                <div class="feature-desc">100% tươi ngon mỗi ngày</div>
+              </div>
+            </div>
+          </div>
+          <div class="col-6 col-md-3">
+            <div class="feature-item reveal reveal-delay-3">
+              <div class="feature-icon-wrap" style="background: rgba(255,209,102,0.15);">
+                <span aria-hidden="true">👨‍🍳</span>
+              </div>
+              <div>
+                <div class="feature-title">Đầu Bếp 5 Sao</div>
+                <div class="feature-desc">Chuyên nghiệp & đam mê</div>
+              </div>
+            </div>
+          </div>
+          <div class="col-6 col-md-3">
+            <div class="feature-item reveal reveal-delay-4">
+              <div class="feature-icon-wrap" style="background: rgba(99,179,237,0.12);">
+                <span aria-hidden="true">💳</span>
+              </div>
+              <div>
+                <div class="feature-title">Thanh Toán Dễ</div>
+                <div class="feature-desc">Nhiều phương thức</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════
+         MAIN MENU SECTION
+    ═══════════════════════════════════════════ -->
+    <main id="menu-section" class="menu-section" role="main">
+      <div class="container">
+
+        <!-- Section Header -->
+        <div class="row align-items-end mb-4 gy-3">
+          <div class="col-lg-7 reveal reveal-left">
+            <div class="section-eyebrow">
+              <i class="bi bi-stars" aria-hidden="true"></i>
+              Thực Đơn Đặc Sắc
+            </div>
+            <h2 class="section-title">
+              Khám Phá Món Ăn<br />
+              <span class="gradient-text">Hấp Dẫn</span> Của Chúng Tôi
+            </h2>
+            <p class="section-desc">
+              Tất cả các món được chế biến tươi ngon mỗi ngày bởi đội ngũ đầu bếp chuyên nghiệp,
+              với nguyên liệu được chọn lọc kỹ càng.
+            </p>
+          </div>
+          <div class="col-lg-5 text-lg-end reveal reveal-right">
+            <img
+              src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=600&q=75&auto=format&fit=crop"
+              alt="Bếp nhà hàng cao cấp"
+              style="height: 180px; width: 100%; object-fit: cover;
+                     border-radius: 20px; box-shadow: var(--shadow-card);"
+              loading="lazy"
+            />
+          </div>
+        </div>
+
+        <!-- Search -->
+        <div class="fm-search-wrap reveal">
+          <i class="bi bi-search search-icon" aria-hidden="true"></i>
+          <!-- id="searchMenu" PRESERVED -->
+          <input
+            type="search"
+            id="searchMenu"
+            placeholder="🔍  Tìm kiếm món ăn yêu thích..."
+            autocomplete="off"
+            aria-label="Tìm kiếm món ăn"
+          />
+          <span class="search-shortcut d-none d-md-block" aria-hidden="true">Tìm kiếm</span>
+        </div>
+
+        <!-- Category Filter -->
+        <!-- id="categoryList" PRESERVED -->
+        <div id="categoryList" role="group" aria-label="Lọc theo danh mục" id="category-section">
+          <!-- class="btn-category" PRESERVED — rendered by JS -->
+          <!-- JS sẽ inject các nút .btn-category[data-category="..."] vào đây -->
+        </div>
+
+        <!-- Toolbar: Count + Sort -->
+        <div class="menu-toolbar">
+          <div class="toolbar-count" aria-live="polite">
+            Tìm thấy
+            <!-- id="totalDishes" PRESERVED -->
+            <strong id="totalDishes">...</strong>
+            món ăn
+          </div>
+
+          <div class="sort-wrap">
+            <label for="sortPrice">
+              <i class="bi bi-sort-down-alt" aria-hidden="true"></i>
+              Sắp xếp:
+            </label>
+            <!-- id="sortPrice" PRESERVED -->
+            <select id="sortPrice" aria-label="Sắp xếp theo giá">
+              <option value="default">Mặc định</option>
+              <option value="asc">Giá tăng dần</option>
+              <option value="desc">Giá giảm dần</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Dishes Grid -->
+        <!-- id="dishesContainer" PRESERVED -->
+        <div
+          id="dishesContainer"
+          role="list"
+          aria-label="Danh sách món ăn"
+          aria-live="polite"
+        >
+          <!-- JS sẽ inject các dish card vào đây -->
+          <!-- Loading placeholder -->
+          <div class="fm-loading-state" role="status" aria-label="Đang tải...">
+            <div class="loading-spinner" aria-hidden="true"></div>
+            <p style="font-size:0.95rem; font-weight:500; color:#94a3b8;">
+              Đang tải thực đơn...
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </main>
+
+    <!-- ═══════════════════════════════════════════
+         PROMO / WHY CHOOSE US SECTION
+    ═══════════════════════════════════════════ -->
+    <section class="promo-section" aria-labelledby="promoHeading">
+      <div class="container">
+        <div class="text-center mb-5 reveal">
+          <div class="section-eyebrow" style="background:rgba(255,255,255,0.1); color:var(--brand-accent); display:inline-flex;">
+            <i class="bi bi-award" aria-hidden="true"></i>
+            Tại Sao Chọn Chúng Tôi
+          </div>
+          <h2 class="section-title" id="promoHeading" style="color:white;">
+            Trải Nghiệm Ẩm Thực<br />
+            <span style="background:var(--gradient-brand); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;">Không Gì Sánh Bằng</span>
+          </h2>
+        </div>
+
+        <div class="row g-4">
+          <div class="col-6 col-lg-3">
+            <div class="promo-card reveal reveal-delay-1">
+              <span class="promo-card-icon" aria-hidden="true">🍳</span>
+              <h4>Nấu Tươi Mỗi Ngày</h4>
+              <p>Không thực phẩm đông lạnh. Mỗi món được nấu tươi ngay khi có đơn hàng.</p>
+            </div>
+          </div>
+          <div class="col-6 col-lg-3">
+            <div class="promo-card reveal reveal-delay-2">
+              <span class="promo-card-icon" aria-hidden="true">🏆</span>
+              <h4>Chuẩn Vị Cao Cấp</h4>
+              <p>Công thức từ đầu bếp 5 sao với hơn 15 năm kinh nghiệm ẩm thực quốc tế.</p>
+            </div>
+          </div>
+          <div class="col-6 col-lg-3">
+            <div class="promo-card reveal reveal-delay-3">
+              <span class="promo-card-icon" aria-hidden="true">🚀</span>
+              <h4>Giao Hàng Siêu Tốc</h4>
+              <p>Đội ngũ giao hàng chuyên nghiệp đảm bảo món ăn đến tay bạn còn nóng hổi.</p>
+            </div>
+          </div>
+          <div class="col-6 col-lg-3">
+            <div class="promo-card reveal reveal-delay-4">
+              <span class="promo-card-icon" aria-hidden="true">💎</span>
+              <h4>Ưu Đãi Hội Viên</h4>
+              <p>Tích điểm mỗi đơn hàng, nhận quà tặng và ưu đãi độc quyền mỗi tháng.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════
+         CONTACT SECTION
+    ═══════════════════════════════════════════ -->
+    <section
+      id="contact-section"
+      style="background:#f7f8fc; padding:5rem 0; position:relative; z-index:10;"
+      aria-labelledby="contactHeading"
+    >
+      <div class="container">
+        <div class="row align-items-center gy-5">
+          <div class="col-lg-5 reveal reveal-left">
+            <div class="section-eyebrow">
+              <i class="bi bi-telephone" aria-hidden="true"></i>
+              Liên Hệ Ngay
+            </div>
+            <h2 class="section-title" id="contactHeading">
+              Đặt Bàn &<br />
+              <span class="gradient-text">Liên Hệ</span> Chúng Tôi
+            </h2>
+            <p class="section-desc" style="max-width:400px;">
+              Hãy liên hệ để đặt bàn, tư vấn thực đơn tiệc hoặc hợp tác kinh doanh.
+              Chúng tôi luôn sẵn sàng phục vụ bạn.
+            </p>
+
+            <div class="mt-4 d-flex flex-column gap-3">
+              <!-- Phone -->
+              <div style="display:flex; align-items:center; gap:1rem;">
+                <div style="width:50px; height:50px; border-radius:15px; background:rgba(255,107,53,0.1); display:flex; align-items:center; justify-content:center; color:var(--brand-primary); font-size:1.2rem; flex-shrink:0;">
+                  <i class="bi bi-telephone-fill" aria-hidden="true"></i>
+                </div>
+                <div>
+                  <div style="font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:#94a3b8; margin-bottom:2px;">Điện Thoại</div>
+                  <a href="tel:0866044026" style="font-size:1.05rem; font-weight:700; color:#1a1a2e; text-decoration:none; transition:color 0.2s;">0866 044 026</a>
+                </div>
+              </div>
+
+              <!-- Email -->
+              <div style="display:flex; align-items:center; gap:1rem;">
+                <div style="width:50px; height:50px; border-radius:15px; background:rgba(255,107,53,0.1); display:flex; align-items:center; justify-content:center; color:var(--brand-primary); font-size:1.2rem; flex-shrink:0;">
+                  <i class="bi bi-envelope-fill" aria-hidden="true"></i>
+                </div>
+                <div>
+                  <div style="font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:#94a3b8; margin-bottom:2px;">Email</div>
+                  <a href="mailto:kzinfortech@gmail.com" style="font-size:1rem; font-weight:700; color:#1a1a2e; text-decoration:none; word-break:break-all; transition:color 0.2s;">kzinfortech@gmail.com</a>
+                </div>
+              </div>
+
+              <!-- Bank -->
+              <div style="display:flex; align-items:center; gap:1rem;">
+                <div style="width:50px; height:50px; border-radius:15px; background:rgba(255,107,53,0.1); display:flex; align-items:center; justify-content:center; color:var(--brand-primary); font-size:1.2rem; flex-shrink:0;">
+                  <i class="bi bi-bank2" aria-hidden="true"></i>
+                </div>
+                <div>
+                  <div style="font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:#94a3b8; margin-bottom:2px;">Ngân Hàng — Techcombank</div>
+                  <span style="font-size:1.05rem; font-weight:800; color:#1a1a2e; letter-spacing:0.05em; font-family:monospace;">5555 5555 5553</span>
+                </div>
+              </div>
+
+              <!-- Address -->
+              <div style="display:flex; align-items:center; gap:1rem;">
+                <div style="width:50px; height:50px; border-radius:15px; background:rgba(255,107,53,0.1); display:flex; align-items:center; justify-content:center; color:var(--brand-primary); font-size:1.2rem; flex-shrink:0;">
+                  <i class="bi bi-geo-alt-fill" aria-hidden="true"></i>
+                </div>
+                <div>
+                  <div style="font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:#94a3b8; margin-bottom:2px;">Địa Chỉ</div>
+                  <span style="font-size:1rem; font-weight:600; color:#1a1a2e;">Hà Nội, Việt Nam</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-7 reveal reveal-right">
+            <div style="border-radius:24px; overflow:hidden; box-shadow:var(--shadow-card);">
+              <img
+                src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=900&q=80&auto=format&fit=crop"
+                alt="Nhà hàng FoodieMenu"
+                style="width:100%; height:420px; object-fit:cover; display:block;"
+                loading="lazy"
+              />
+            </div>
+
+            <!-- Social links -->
+            <div style="display:flex; gap:1rem; margin-top:1.5rem; align-items:center; flex-wrap:wrap;">
+              <span style="font-size:0.82rem; font-weight:700; color:#94a3b8; text-transform:uppercase; letter-spacing:0.08em;">Theo Dõi:</span>
+
+              <a
+                href="https://www.facebook.com/Kz.3103"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Facebook KzX Corp"
+                style="display:inline-flex; align-items:center; gap:0.5rem; background:#1877f2; color:white; padding:0.5rem 1.1rem; border-radius:50px; font-size:0.85rem; font-weight:700; text-decoration:none; transition:all 0.25s ease; box-shadow:0 4px 14px rgba(24,119,242,0.3);"
+                onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 8px 24px rgba(24,119,242,0.4)';"
+                onmouseout="this.style.transform='none'; this.style.boxShadow='0 4px 14px rgba(24,119,242,0.3)';"
+              >
+                <i class="bi bi-facebook" aria-hidden="true"></i>
+                Facebook
+              </a>
+
+              <a
+                href="https://www.tiktok.com/@kzis.corp?_r=1&_t=ZS-97nqOlIBwwi&fbclid=IwY2xjawS4TiZleHRuA2FlbQIxMABicmlkETFDSVh0M3JmOWloUWpacWFkc3J0YwZhcHBfaWQQMjIyMDM5MTc4ODIwMDg5MgABHh28pikutueAzyliHeiZOJ8kFbWjE6soolkkrXg-riPU6AcBz5o7NdJTuRoS_aem_18EFzD10hZslZcSE_LongA"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="TikTok KzX Corp"
+                style="display:inline-flex; align-items:center; gap:0.5rem; background:#010101; color:white; padding:0.5rem 1.1rem; border-radius:50px; font-size:0.85rem; font-weight:700; text-decoration:none; transition:all 0.25s ease; box-shadow:0 4px 14px rgba(0,0,0,0.2);"
+                onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 8px 24px rgba(0,0,0,0.35)';"
+                onmouseout="this.style.transform='none'; this.style.boxShadow='0 4px 14px rgba(0,0,0,0.2)';"
+              >
+                <i class="fab fa-tiktok" aria-hidden="true"></i>
+                TikTok
+              </a>
+
+              <a
+                href="https://www.instagram.com/zen.hi.144"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Instagram KzX Corp"
+                style="display:inline-flex; align-items:center; gap:0.5rem; background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888); color:white; padding:0.5rem 1.1rem; border-radius:50px; font-size:0.85rem; font-weight:700; text-decoration:none; transition:all 0.25s ease; box-shadow:0 4px 14px rgba(220,39,67,0.3);"
+                onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 8px 24px rgba(220,39,67,0.45)';"
+                onmouseout="this.style.transform='none'; this.style.boxShadow='0 4px 14px rgba(220,39,67,0.3)';"
+              >
+                <i class="bi bi-instagram" aria-hidden="true"></i>
+                Instagram
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════
+         FOOTER
+    ═══════════════════════════════════════════ -->
+    <footer class="fm-footer" role="contentinfo">
+      <div class="container">
+        <div class="row g-5">
+
+          <!-- Brand Column -->
+          <div class="col-12 col-md-6 col-lg-4">
+            <div class="footer-brand-name">
+              <span aria-hidden="true">🍽️</span>
+              Foodie<span style="background:var(--gradient-brand); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;">Menu</span>
+              <span class="footer-brand-badge">Premium</span>
+            </div>
+            <div class="footer-tagline">Ẩm thực đỉnh cao, trải nghiệm khó quên</div>
+            <p class="footer-desc">
+              Được phát triển và vận hành bởi
+              <strong style="color:var(--brand-primary);">KzX Corp</strong> —
+              Chuyên cung cấp giải pháp công nghệ và ẩm thực cao cấp tại Hà Nội, Việt Nam.
+            </p>
+
+            <!-- Social -->
+            <div class="footer-social">
+              <a
+                class="social-btn fb"
+                href="https://www.facebook.com/Kz.3103"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Facebook KzX Corp"
+                title="Facebook"
+              >
+                <i class="bi bi-facebook" aria-hidden="true"></i>
+              </a>
+              <a
+                class="social-btn tt"
+                href="https://www.tiktok.com/@kzis.corp?_r=1&_t=ZS-97nqOlIBwwi&fbclid=IwY2xjawS4TiZleHRuA2FlbQIxMABicmlkETFDSVh0M3JmOWloUWpacWFkc3J0YwZhcHBfaWQQMjIyMDM5MTc4ODIwMDg5MgABHh28pikutueAzyliHeiZOJ8kFbWjE6soolkkrXg-riPU6AcBz5o7NdJTuRoS_aem_18EFzD10hZslZcSE_LongA"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="TikTok KzX Corp"
+                title="TikTok"
+              >
+                <i class="fab fa-tiktok" aria-hidden="true"></i>
+              </a>
+              <a
+                class="social-btn ig"
+                href="https://www.instagram.com/zen.hi.144"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Instagram KzX Corp"
+                title="Instagram"
+              >
+                <i class="bi bi-instagram" aria-hidden="true"></i>
+              </a>
+            </div>
+          </div>
+
+          <!-- Quick Links -->
+          <div class="col-6 col-md-3 col-lg-2">
+            <p class="footer-heading">Khám Phá</p>
+            <ul class="footer-links">
+              <li><a href="index.html"><i class="bi bi-chevron-right" aria-hidden="true"></i>Trang Chủ</a></li>
+              <li><a href="#menu-section"><i class="bi bi-chevron-right" aria-hidden="true"></i>Thực Đơn</a></li>
+              <li><a href="#category-section"><i class="bi bi-chevron-right" aria-hidden="true"></i>Danh Mục</a></li>
+              <li><a href="#contact-section"><i class="bi bi-chevron-right" aria-hidden="true"></i>Liên Hệ</a></li>
+              <li><a href="admin/index.html"><i class="bi bi-chevron-right" aria-hidden="true"></i>Quản Trị</a></li>
+            </ul>
+          </div>
+
+          <!-- Services -->
+          <div class="col-6 col-md-3 col-lg-2">
+            <p class="footer-heading">Dịch Vụ</p>
+            <ul class="footer-links">
+              <li><a href="#"><i class="bi bi-chevron-right" aria-hidden="true"></i>Đặt Bàn</a></li>
+              <li><a href="#"><i class="bi bi-chevron-right" aria-hidden="true"></i>Giao Hàng</a></li>
+              <li><a href="#"><i class="bi bi-chevron-right" aria-hidden="true"></i>Tiệc Nhóm</a></li>
+              <li><a href="#"><i class="bi bi-chevron-right" aria-hidden="true"></i>Ưu Đãi</a></li>
+              <li><a href="#"><i class="bi bi-chevron-right" aria-hidden="true"></i>Combo Deal</a></li>
+            </ul>
+          </div>
+
+          <!-- Contact Info -->
+          <div class="col-12 col-lg-4">
+            <p class="footer-heading">Thông Tin Liên Hệ</p>
+
+            <div class="footer-contact-item">
+              <div class="contact-icon"><i class="bi bi-building" aria-hidden="true"></i></div>
+              <div>
+                <span class="contact-label">Công Ty</span>
+                <span class="contact-value">KzX Corp</span>
+              </div>
+            </div>
+
+            <div class="footer-contact-item">
+              <div class="contact-icon"><i class="bi bi-geo-alt-fill" aria-hidden="true"></i></div>
+              <div>
+                <span class="contact-label">Địa Chỉ</span>
+                <span class="contact-value">Hà Nội, Việt Nam</span>
+              </div>
+            </div>
+
+            <div class="footer-contact-item">
+              <div class="contact-icon"><i class="bi bi-telephone-fill" aria-hidden="true"></i></div>
+              <div>
+                <span class="contact-label">Điện Thoại</span>
+                <a href="tel:0866044026" class="contact-value">0866 044 026</a>
+              </div>
+            </div>
+
+            <div class="footer-contact-item">
+              <div class="contact-icon"><i class="bi bi-envelope-fill" aria-hidden="true"></i></div>
+              <div>
+                <span class="contact-label">Email</span>
+                <a href="mailto:kzinfortech@gmail.com" class="contact-value">kzinfortech@gmail.com</a>
+              </div>
+            </div>
+
+            <div class="footer-contact-item">
+              <div class="contact-icon"><i class="bi bi-bank2" aria-hidden="true"></i></div>
+              <div>
+                <span class="contact-label">Techcombank</span>
+                <span class="contact-value" style="font-family:monospace; letter-spacing:0.05em;">5555 5555 5553</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <hr class="footer-divider" />
+
+        <div class="footer-bottom">
+          <div class="footer-bottom-text">
+            © 2026 <strong>KzX Corp</strong> · FoodieMenu. Bảo lưu mọi quyền.
+          </div>
+          <div class="footer-bottom-badge">
+            <span>
+              <i class="bi bi-bootstrap-fill" aria-hidden="true"></i>
+              Bootstrap 5
+            </span>
+            <span>
+              <i class="bi bi-lightning-fill" aria-hidden="true"></i>
+              jQuery 3.7
+            </span>
+            <span>
+              <i class="bi bi-heart-fill" style="color:#ff6b35;" aria-hidden="true"></i>
+              Made in VN
+            </span>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <!-- ═══════════════════════════════════════════
+         SCROLL TO TOP BUTTON
+    ═══════════════════════════════════════════ -->
+    <button
+      id="scrollToTopBtn"
+      type="button"
+      aria-label="Cuộn về đầu trang"
+      title="Lên đầu trang"
+    >
+      <i class="bi bi-arrow-up" aria-hidden="true"></i>
+    </button>
+
+    <!-- ═══════════════════════════════════════════
+         MODAL: CHI TIẾT MÓN ĂN
+         id="dishDetailModal" — BẮT BUỘC GIỮ
+    ═══════════════════════════════════════════ -->
+    <div
+      class="modal fade"
+      id="dishDetailModal"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="dishDetailModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+
+          <!-- Modal Header -->
+          <div class="modal-header">
+            <h2 class="modal-title" id="dishDetailModalLabel">
+              <i class="bi bi-stars" aria-hidden="true"></i>
+              Chi Tiết Món Ăn
+            </h2>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Đóng"
+            ></button>
+          </div>
+
+          <!-- Modal Body -->
+          <div class="modal-body p-0">
+            <div class="row g-0">
+
+              <!-- Image Column -->
+              <div class="col-md-5 modal-img-col">
+                <!-- id="modalDishImg" PRESERVED -->
+                <img
+                  id="modalDishImg"
+                  src=""
+                  alt="Hình ảnh món ăn"
+                  loading="lazy"
+                />
+                <div class="modal-img-gradient" aria-hidden="true"></div>
+              </div>
+
+              <!-- Info Column -->
+              <div class="col-md-7 modal-info-col">
+
+                <!-- Category Badge -->
+                <!-- id="modalDishCategory" PRESERVED -->
+                <div id="modalDishCategory" aria-label="Danh mục món ăn">
+                  <i class="bi bi-tag" aria-hidden="true"></i>
+                  <span>Danh mục</span>
+                </div>
+
+                <!-- Dish Name -->
+                <!-- id="modalDishName" PRESERVED -->
+                <h3 id="modalDishName" aria-label="Tên món ăn"></h3>
+
+                <!-- Stars rating (decorative) -->
+                <div
+                  class="d-flex align-items-center gap-2 mb-2"
+                  aria-label="Đánh giá 4.8 sao"
+                >
+                  <div style="color:#fbbf24; font-size:0.85rem;" aria-hidden="true">
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-half"></i>
+                  </div>
+                  <span style="font-size:0.78rem; color:#94a3b8; font-weight:600;">4.8 (200+ đánh giá)</span>
+                </div>
+
+                <!-- Price -->
+                <!-- id="modalDishPrice" PRESERVED -->
+                <div id="modalDishPrice" aria-label="Giá tiền"></div>
+
+                <div class="modal-divider" aria-hidden="true"></div>
+
+                <!-- Description -->
+                <!-- id="modalDishDesc" PRESERVED -->
+                <p id="modalDishDesc" aria-label="Mô tả món ăn"></p>
+
+                <!-- Status -->
+                <div class="modal-status-wrap">
+                  <span
+                    style="font-size:0.82rem; font-weight:700; color:#94a3b8; display:block; margin-bottom:0.5rem; text-transform:uppercase; letter-spacing:0.08em;"
+                  >Trạng thái phục vụ:</span>
+                  <!-- id="modalDishStatus" PRESERVED -->
+                  <span id="modalDishStatus" role="status" aria-live="polite"></span>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="modal-action-row">
+                  <button type="button" class="btn-modal-order ripple-btn" aria-label="Đặt món ngay">
+                    <i class="bi bi-bag-plus" aria-hidden="true"></i>
+                    Đặt Món Ngay
+                  </button>
+                  <button
+                    type="button"
+                    class="btn-modal-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Đóng modal"
+                  >
+                    <i class="bi bi-x-lg" aria-hidden="true"></i>
+                    Đóng
+                  </button>
+                </div>
+
+              </div>
+            </div>
+          </div>
+          <!-- /modal-body -->
+
+        </div>
+      </div>
+    </div>
+    <!-- /dishDetailModal -->
+
+    <!-- ═══════════════════════════════════════════
+         TOAST CONTAINER
+         id="toastContainer" — BẮT BUỘC GIỮ
+    ═══════════════════════════════════════════ -->
+    <div id="toastContainer" role="region" aria-label="Thông báo" aria-live="polite"></div>
+
+    <!-- ═══════════════════════════════════════════
+         JAVASCRIPT — BẮT BUỘC GIỮ THỨ TỰ
+    ═══════════════════════════════════════════ -->
+
+    <!-- 1. jQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+    <!-- 2. Bootstrap 5 Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- 3. Utils -->
+    <script src="js/utils.js"></script>
+
+    <!-- 4. API -->
+    <script src="js/api.js"></script>
+
+    <!-- 5. Main App Logic -->
+    <script src="js/main.js"></script>
+
+    <!-- ═══════════════════════════════════════════
+         INLINE UI ENHANCEMENTS
+         (Chỉ là hiệu ứng thuần CSS/DOM — không đụng đến JS logic)
+    ═══════════════════════════════════════════ -->
+    <script>
+      (function () {
+        "use strict";
+
+        /* ── Navbar scroll effect ── */
+        var navbar = document.getElementById("mainNavbar");
+        window.addEventListener("scroll", function () {
+          if (window.scrollY > 60) {
+            navbar.classList.add("scrolled");
+          } else {
+            navbar.classList.remove("scrolled");
+          }
+        }, { passive: true });
+
+        /* ── Scroll to Top Button ── */
+        var scrollBtn = document.getElementById("scrollToTopBtn");
+        window.addEventListener("scroll", function () {
+          if (window.scrollY > 500) {
+            scrollBtn.classList.add("visible");
+          } else {
+            scrollBtn.classList.remove("visible");
+          }
+        }, { passive: true });
+
+        scrollBtn.addEventListener("click", function () {
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        });
+
+        /* ── Scroll Reveal (Intersection Observer) ── */
+        var revealEls = document.querySelectorAll(".reveal, .reveal-left, .reveal-right");
+        if ("IntersectionObserver" in window) {
+          var observer = new IntersectionObserver(function (entries) {
+            entries.forEach(function (entry) {
+              if (entry.isIntersecting) {
+                entry.target.classList.add("visible");
+                observer.unobserve(entry.target);
+              }
+            });
+          }, { threshold: 0.12, rootMargin: "0px 0px -40px 0px" });
+
+          revealEls.forEach(function (el) {
+            observer.observe(el);
+          });
+        } else {
+          /* Fallback cho trình duyệt cũ */
+          revealEls.forEach(function (el) {
+            el.classList.add("visible");
+          });
+        }
+
+        /* ── Smooth scroll cho Hero scroll cue ── */
+        var scrollCue = document.querySelector(".hero-scroll-cue");
+        if (scrollCue) {
+          scrollCue.addEventListener("click", function (e) {
+            e.preventDefault();
+            var target = document.getElementById("features-bar");
+            if (target) {
+              target.scrollIntoView({ behavior: "smooth", block: "start" });
+            }
+          });
+        }
+
+        /* ── Ripple effect ── */
+        document.addEventListener("click", function (e) {
+          var btn = e.target.closest(".ripple-btn");
+          if (!btn) return;
+
+          var ripple = document.createElement("span");
+          var rect = btn.getBoundingClientRect();
+          var size = Math.max(rect.width, rect.height);
+          var x = e.clientX - rect.left - size / 2;
+          var y = e.clientY - rect.top - size / 2;
+
+          ripple.classList.add("ripple");
+          ripple.style.cssText = [
+            "width:" + size + "px",
+            "height:" + size + "px",
+            "left:" + x + "px",
+            "top:" + y + "px"
+          ].join(";");
+
+          btn.appendChild(ripple);
+          setTimeout(function () {
+            if (ripple.parentNode === btn) {
+              btn.removeChild(ripple);
+            }
+          }, 600);
+        });
+
+        /* ── Hero cue: smooth scroll nav links ── */
+        document.querySelectorAll('a[href^="#"]').forEach(function (anchor) {
+          anchor.addEventListener("click", function (e) {
+            var href = this.getAttribute("href");
+            if (href === "#") return;
+            var target = document.querySelector(href);
+            if (target) {
+              e.preventDefault();
+              var navH = navbar ? navbar.offsetHeight : 70;
+              var top = target.getBoundingClientRect().top + window.scrollY - navH - 16;
+              window.scrollTo({ top: top, behavior: "smooth" });
+            }
+          });
+        });
+      })();
+    </script>
+
+  </body>
+</html>

@@ -1,0 +1,2342 @@
+/* ============================================================
+ * FILE: css/style.css
+ * MÔ TẢ: Custom styles bổ sung cho FoodieMenu
+ *        Mở rộng Bootstrap 5 với các hiệu ứng và component
+ *        đặc thù cho website thực đơn nhà hàng
+ * TÁC GIẢ: [Tên của bạn]
+ * NGÀY TẠO: 2025
+ *
+ * MỤC LỤC:
+ *   1.  CSS Custom Properties (Variables)
+ *   2.  Reset & Base Styles
+ *   3.  Typography
+ *   4.  Layout & Navigation
+ *   5.  Dish Card Component
+ *   6.  Card Hover Effects
+ *   7.  "Hết Món" Badge Overlay
+ *   8.  Skeleton Loading Animation
+ *   9.  Spinner & Loading States
+ *   10. Category Filter Bar
+ *   11. Form & Modal Styles
+ *   12. Toast & Alert Custom
+ *   13. Footer
+ *   14. Utility Classes
+ *   15. Responsive - Mobile (<576px)
+ *   16. Responsive - Tablet (>=768px)
+ *   17. Responsive - Desktop (>=992px)
+ *   18. Responsive - Large Desktop (>=1200px)
+ *   19. Print Styles
+ *   20. Accessibility & Reduced Motion
+ * ============================================================ */
+
+
+/* ================================================================
+   PHẦN 1: CSS CUSTOM PROPERTIES (VARIABLES)
+   Định nghĩa toàn bộ màu sắc, spacing, shadow dùng chung
+   ================================================================ */
+
+:root {
+  /* --- Brand Colors --- */
+  --foodie-primary:        #ff6b35;   /* Cam đất - màu chủ đạo */
+  --foodie-primary-dark:   #e85520;   /* Cam đậm hơn - hover state */
+  --foodie-primary-light:  #ff8c5a;   /* Cam nhạt hơn - tint */
+  --foodie-primary-muted:  rgba(255, 107, 53, 0.12); /* Nền nhạt primary */
+
+  --foodie-secondary:      #2d3748;   /* Xám xanh đậm - text chính */
+  --foodie-accent:         #ffd166;   /* Vàng nghệ - điểm nhấn */
+  --foodie-success:        #38a169;   /* Xanh lá - còn hàng */
+  --foodie-danger:         #e53e3e;   /* Đỏ - hết hàng / lỗi */
+  --foodie-warning:        #d69e2e;   /* Vàng đậm - cảnh báo */
+
+  /* --- Neutral Colors --- */
+  --foodie-bg:             #faf9f7;   /* Nền trang - kem nhạt */
+  --foodie-bg-card:        #ffffff;   /* Nền card */
+  --foodie-bg-section:     #f4f0eb;   /* Nền section xen kẽ */
+  --foodie-border:         #e8e2d9;   /* Màu border */
+  --foodie-border-light:   #f0ebe4;   /* Border nhạt */
+
+  /* --- Text Colors --- */
+  --foodie-text-primary:   #1a202c;   /* Text đậm nhất */
+  --foodie-text-secondary: #4a5568;   /* Text phụ */
+  --foodie-text-muted:     #718096;   /* Text mờ */
+  --foodie-text-light:     #a0aec0;   /* Text rất nhạt */
+
+  /* --- "Hết Món" Overlay Colors --- */
+  --overlay-soldout-bg:    rgba(30, 30, 30, 0.72);   /* Overlay tối */
+  --overlay-soldout-text:  #f7fafc;                  /* Text trắng */
+  --overlay-soldout-badge: rgba(229, 62, 62, 0.90);  /* Badge đỏ đậm */
+  --overlay-paused-bg:     rgba(74, 85, 104, 0.68);  /* Overlay xám - ngừng phục vụ */
+  --overlay-paused-badge:  rgba(113, 128, 150, 0.92); /* Badge xám */
+
+  /* --- Skeleton Colors --- */
+  --skeleton-base:         #e8e2d9;   /* Màu nền skeleton */
+  --skeleton-shimmer:      #f4f0eb;   /* Màu sóng shimmer */
+  --skeleton-dark:         #d4ccc0;   /* Skeleton đậm hơn */
+
+  /* --- Shadows --- */
+  --shadow-xs:    0 1px 3px rgba(0, 0, 0, 0.06),
+                  0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-sm:    0 2px 8px rgba(0, 0, 0, 0.08),
+                  0 1px 4px rgba(0, 0, 0, 0.05);
+  --shadow-md:    0 4px 16px rgba(0, 0, 0, 0.10),
+                  0 2px 8px rgba(0, 0, 0, 0.06);
+  --shadow-lg:    0 8px 32px rgba(0, 0, 0, 0.12),
+                  0 4px 16px rgba(0, 0, 0, 0.08);
+  --shadow-xl:    0 16px 48px rgba(0, 0, 0, 0.15),
+                  0 8px 24px rgba(0, 0, 0, 0.10);
+  --shadow-card-hover: 0 12px 40px rgba(255, 107, 53, 0.18),
+                       0 6px 20px rgba(0, 0, 0, 0.10);
+
+  /* --- Border Radius --- */
+  --radius-xs:   4px;
+  --radius-sm:   8px;
+  --radius-md:   12px;
+  --radius-lg:   16px;
+  --radius-xl:   24px;
+  --radius-pill: 9999px;
+
+  /* --- Spacing Scale (bổ sung Bootstrap) --- */
+  --space-xs:   0.25rem;   /* 4px  */
+  --space-sm:   0.5rem;    /* 8px  */
+  --space-md:   1rem;      /* 16px */
+  --space-lg:   1.5rem;    /* 24px */
+  --space-xl:   2rem;      /* 32px */
+  --space-2xl:  3rem;      /* 48px */
+  --space-3xl:  4rem;      /* 64px */
+
+  /* --- Typography --- */
+  --font-primary:  'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --font-display:  'Playfair Display', Georgia, 'Times New Roman', serif;
+  --font-mono:     'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+
+  --text-xs:   0.75rem;    /* 12px */
+  --text-sm:   0.875rem;   /* 14px */
+  --text-base: 1rem;       /* 16px */
+  --text-lg:   1.125rem;   /* 18px */
+  --text-xl:   1.25rem;    /* 20px */
+  --text-2xl:  1.5rem;     /* 24px */
+  --text-3xl:  1.875rem;   /* 30px */
+  --text-4xl:  2.25rem;    /* 36px */
+
+  /* --- Transitions --- */
+  --transition-fast:   150ms ease;
+  --transition-base:   250ms ease;
+  --transition-slow:   400ms ease;
+  --transition-card:   300ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+  /* --- Z-index Scale --- */
+  --z-base:       1;
+  --z-dropdown:   1000;
+  --z-sticky:     1020;
+  --z-fixed:      1030;
+  --z-modal-bg:   1040;
+  --z-modal:      1050;
+  --z-popover:    1060;
+  --z-tooltip:    1070;
+  --z-toast:      1080;
+  --z-loading:    9999;
+}
+
+
+/* ================================================================
+   PHẦN 2: RESET & BASE STYLES
+   ================================================================ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  /* Giữ nguyên box-sizing của Bootstrap */
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%; /* Ngăn iOS tự zoom font */
+  font-size: 16px;
+}
+
+body {
+  font-family: var(--font-primary);
+  background-color: var(--foodie-bg);
+  color: var(--foodie-text-primary);
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;  /* Font sắc nét trên macOS/iOS */
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+  overflow-x: hidden; /* Ngăn scroll ngang khi có animation */
+}
+
+/* Loại bỏ outline mặc định xấu, thay bằng outline đẹp hơn */
+:focus-visible {
+  outline: 3px solid var(--foodie-primary);
+  outline-offset: 2px;
+  border-radius: var(--radius-xs);
+}
+
+/* Hình ảnh không bị tràn container */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Smooth transition cho tất cả link */
+a {
+  color: var(--foodie-primary);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+a:hover {
+  color: var(--foodie-primary-dark);
+}
+
+/* Đường kẻ ngang đẹp hơn */
+hr {
+  border: none;
+  border-top: 1px solid var(--foodie-border);
+  opacity: 1;
+  margin: var(--space-xl) 0;
+}
+
+
+/* ================================================================
+   PHẦN 3: TYPOGRAPHY
+   ================================================================ */
+
+/* Tiêu đề trang / Section heading */
+.foodie-heading {
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--foodie-text-primary);
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+.foodie-heading--lg {
+  font-size: clamp(var(--text-2xl), 5vw, var(--text-4xl));
+}
+
+.foodie-heading--md {
+  font-size: clamp(var(--text-xl), 3vw, var(--text-3xl));
+}
+
+.foodie-heading--sm {
+  font-size: clamp(var(--text-lg), 2.5vw, var(--text-2xl));
+}
+
+/* Highlight text màu cam */
+.text-brand {
+  color: var(--foodie-primary) !important;
+}
+
+.text-brand-accent {
+  color: var(--foodie-accent) !important;
+}
+
+/* Label giá tiền */
+.price-label {
+  font-size: var(--text-lg);
+  font-weight: 700;
+  color: var(--foodie-primary);
+  letter-spacing: -0.01em;
+}
+
+.price-label--lg {
+  font-size: var(--text-2xl);
+}
+
+.price-label--sm {
+  font-size: var(--text-base);
+  font-weight: 600;
+}
+
+/* Text mô tả món ăn - giới hạn 3 dòng */
+.dish-description {
+  color: var(--foodie-text-secondary);
+  font-size: var(--text-sm);
+  line-height: 1.6;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Divider với text ở giữa */
+.divider-text {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  color: var(--foodie-text-muted);
+  font-size: var(--text-sm);
+  margin: var(--space-lg) 0;
+}
+
+.divider-text::before,
+.divider-text::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--foodie-border);
+}
+
+
+/* ================================================================
+   PHẦN 4: LAYOUT & NAVIGATION
+   ================================================================ */
+
+/* --- Navbar --- */
+.foodie-navbar {
+  background-color: var(--foodie-bg-card);
+  border-bottom: 1px solid var(--foodie-border-light);
+  box-shadow: var(--shadow-sm);
+  padding: var(--space-sm) 0;
+  /* Sticky với backdrop blur */
+  position: sticky;
+  top: 0;
+  z-index: var(--z-sticky);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  background-color: rgba(255, 255, 255, 0.92);
+  transition: box-shadow var(--transition-base);
+}
+
+.foodie-navbar.scrolled {
+  box-shadow: var(--shadow-md);
+}
+
+.foodie-navbar .navbar-brand {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: 700;
+  color: var(--foodie-primary) !important;
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  transition: transform var(--transition-base);
+}
+
+.foodie-navbar .navbar-brand:hover {
+  transform: scale(1.03);
+}
+
+.foodie-navbar .navbar-brand .brand-icon {
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.foodie-navbar .nav-link {
+  color: var(--foodie-text-secondary) !important;
+  font-weight: 500;
+  padding: var(--space-xs) var(--space-md) !important;
+  border-radius: var(--radius-sm);
+  transition: color var(--transition-fast),
+              background-color var(--transition-fast);
+  position: relative;
+}
+
+.foodie-navbar .nav-link:hover,
+.foodie-navbar .nav-link.active {
+  color: var(--foodie-primary) !important;
+  background-color: var(--foodie-primary-muted);
+}
+
+/* Underline animation cho nav-link active */
+.foodie-navbar .nav-link.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: var(--space-md);
+  right: var(--space-md);
+  height: 2px;
+  background: var(--foodie-primary);
+  border-radius: var(--radius-pill);
+}
+
+/* --- Hero / Banner Section --- */
+.foodie-hero {
+  background: linear-gradient(
+    135deg,
+    var(--foodie-secondary) 0%,
+    #1a202c 50%,
+    #2d3748 100%
+  );
+  position: relative;
+  overflow: hidden;
+  padding: var(--space-3xl) 0;
+  color: white;
+}
+
+/* Texture overlay cho hero */
+.foodie-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(
+    circle at 20% 50%,
+    rgba(255, 107, 53, 0.15) 0%,
+    transparent 60%
+  ),
+  radial-gradient(
+    circle at 80% 20%,
+    rgba(255, 209, 102, 0.10) 0%,
+    transparent 50%
+  );
+  pointer-events: none;
+}
+
+/* --- Page Header (không dùng full hero) --- */
+.page-header {
+  background-color: var(--foodie-bg-section);
+  border-bottom: 1px solid var(--foodie-border);
+  padding: var(--space-xl) 0;
+}
+
+.page-header .breadcrumb-item + .breadcrumb-item::before {
+  color: var(--foodie-text-muted);
+}
+
+
+/* ================================================================
+   PHẦN 5: DISH CARD COMPONENT
+   Cấu trúc HTML mẫu:
+   <div class="dish-card">
+     <div class="dish-card__image-wrap">
+       <img class="dish-card__image" src="..." alt="...">
+       <div class="dish-card__overlay soldout">...</div>
+       <span class="dish-card__badge--cat">Món chính</span>
+     </div>
+     <div class="dish-card__body">
+       <h3 class="dish-card__name">...</h3>
+       <p class="dish-card__desc">...</p>
+       <div class="dish-card__footer">
+         <span class="dish-card__price">...</span>
+         <div class="dish-card__actions">...</div>
+       </div>
+     </div>
+   </div>
+   ================================================================ */
+
+/* --- Card Container --- */
+.dish-card {
+  background-color: var(--foodie-bg-card);
+  border: 1px solid var(--foodie-border-light);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  height: 100%; /* Đồng đều chiều cao trong grid */
+
+  /* === TRANSITION CHÍNH CHO HOVER EFFECT === */
+  transition:
+    transform      var(--transition-card),
+    box-shadow     var(--transition-card),
+    border-color   var(--transition-card);
+
+  /* Kích hoạt GPU acceleration */
+  will-change: transform, box-shadow;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+/* --- Vùng chứa ảnh --- */
+.dish-card__image-wrap {
+  position: relative;
+  overflow: hidden;
+  /* Tỉ lệ ảnh 4:3 */
+  aspect-ratio: 4 / 3;
+  background-color: var(--foodie-bg-section);
+  flex-shrink: 0;
+}
+
+/* --- Ảnh món ăn --- */
+.dish-card__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transition: transform var(--transition-slow);
+  /* Tránh ảnh bị vỡ khi zoom */
+  will-change: transform;
+}
+
+/* --- Body card --- */
+.dish-card__body {
+  padding: var(--space-md);
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  gap: var(--space-xs);
+}
+
+/* --- Tên món ăn --- */
+.dish-card__name {
+  font-size: var(--text-base);
+  font-weight: 700;
+  color: var(--foodie-text-primary);
+  line-height: 1.3;
+  margin: 0;
+  /* Giới hạn 2 dòng */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  transition: color var(--transition-fast);
+}
+
+/* --- Mô tả ngắn --- */
+.dish-card__desc {
+  font-size: var(--text-sm);
+  color: var(--foodie-text-muted);
+  line-height: 1.55;
+  margin: var(--space-xs) 0 0;
+  flex-grow: 1;
+  /* Giới hạn 2 dòng */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* --- Footer card: giá + nút --- */
+.dish-card__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  margin-top: auto;
+  padding-top: var(--space-sm);
+  border-top: 1px solid var(--foodie-border-light);
+}
+
+/* --- Giá tiền --- */
+.dish-card__price {
+  font-size: var(--text-lg);
+  font-weight: 800;
+  color: var(--foodie-primary);
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+}
+
+/* --- Badge danh mục trên ảnh --- */
+.dish-card__badge--cat {
+  position: absolute;
+  top: var(--space-sm);
+  left: var(--space-sm);
+  background: rgba(255, 255, 255, 0.92);
+  color: var(--foodie-secondary);
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 2px var(--space-sm);
+  border-radius: var(--radius-pill);
+  backdrop-filter: blur(4px);
+  box-shadow: var(--shadow-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  z-index: var(--z-base);
+  pointer-events: none;
+}
+
+/* --- Nút hành động trong card --- */
+.dish-card__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: 0.375rem var(--space-sm);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  border: none;
+  cursor: pointer;
+  transition:
+    background-color var(--transition-fast),
+    transform       var(--transition-fast),
+    box-shadow      var(--transition-fast);
+  white-space: nowrap;
+}
+
+.dish-card__btn--primary {
+  background-color: var(--foodie-primary);
+  color: white;
+}
+
+.dish-card__btn--primary:hover {
+  background-color: var(--foodie-primary-dark);
+  box-shadow: 0 4px 12px rgba(255, 107, 53, 0.35);
+  transform: translateY(-1px);
+}
+
+.dish-card__btn--ghost {
+  background-color: transparent;
+  color: var(--foodie-text-muted);
+  border: 1px solid var(--foodie-border);
+}
+
+.dish-card__btn--ghost:hover {
+  color: var(--foodie-danger);
+  border-color: var(--foodie-danger);
+  background-color: rgba(229, 62, 62, 0.06);
+}
+
+.dish-card__btn:disabled,
+.dish-card__btn[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+
+/* ================================================================
+   PHẦN 6: CARD HOVER EFFECTS
+   Áp dụng khi hover vào .dish-card
+   ================================================================ */
+
+/* === HIỆU ỨNG HOVER CHÍNH: Phóng to + đổ bóng === */
+.dish-card:hover {
+  /* Nâng card lên nhẹ (translateY) + phóng to nhẹ (scale) */
+  transform: translateY(-6px) scale(1.015);
+
+  /* Đổ bóng mạnh hơn, có màu cam nhẹ để tạo cảm giác "sáng lên" */
+  box-shadow: var(--shadow-card-hover);
+
+  /* Border nổi bật hơn */
+  border-color: rgba(255, 107, 53, 0.30);
+}
+
+/* Ảnh zoom vào nhẹ khi hover card */
+.dish-card:hover .dish-card__image {
+  transform: scale(1.08);
+}
+
+/* Tên món đổi sang màu cam khi hover */
+.dish-card:hover .dish-card__name {
+  color: var(--foodie-primary);
+}
+
+/* === HIỆU ỨNG NHẤN (Active state) === */
+.dish-card:active {
+  transform: translateY(-2px) scale(1.005);
+  box-shadow: var(--shadow-md);
+  transition-duration: 80ms; /* Nhanh hơn khi nhấn */
+}
+
+/* === FOCUS STATE cho accessibility (dùng keyboard) === */
+.dish-card:focus-within {
+  outline: 3px solid var(--foodie-primary);
+  outline-offset: 3px;
+}
+
+/* === VARIANT: Card dạng ngang (horizontal layout) === */
+.dish-card--horizontal {
+  flex-direction: row;
+  height: auto;
+}
+
+.dish-card--horizontal .dish-card__image-wrap {
+  width: 140px;
+  min-width: 140px;
+  aspect-ratio: 1 / 1;
+  border-radius: 0;
+}
+
+.dish-card--horizontal:hover {
+  transform: translateX(4px);
+  box-shadow: var(--shadow-md);
+}
+
+/* === VARIANT: Card nhỏ (compact) === */
+.dish-card--compact .dish-card__body {
+  padding: var(--space-sm);
+}
+
+.dish-card--compact .dish-card__name {
+  font-size: var(--text-sm);
+}
+
+.dish-card--compact .dish-card__price {
+  font-size: var(--text-base);
+}
+
+/* === VARIANT: Card nổi bật (featured) === */
+.dish-card--featured {
+  border: 2px solid var(--foodie-accent);
+  position: relative;
+}
+
+.dish-card--featured::before {
+  content: '⭐ Nổi Bật';
+  position: absolute;
+  top: -1px;
+  right: var(--space-md);
+  background: var(--foodie-accent);
+  color: var(--foodie-secondary);
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 2px var(--space-sm);
+  border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  z-index: var(--z-base);
+}
+
+
+/* ================================================================
+   PHẦN 7: "HẾT MÓN" BADGE OVERLAY
+   Hiển thị đè lên ảnh khi món hết hàng hoặc ngừng phục vụ
+   ================================================================ */
+
+/* --- Base Overlay: phủ toàn bộ khung ảnh --- */
+.dish-card__overlay {
+  position: absolute;
+  inset: 0; /* top: 0; right: 0; bottom: 0; left: 0 */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  z-index: 10;
+
+  /* Transition khi thêm/xóa class */
+  transition:
+    opacity       var(--transition-base),
+    backdrop-filter var(--transition-base);
+}
+
+/* === VARIANT 1: "Hết Món" - Nền tối đỏ === */
+.dish-card__overlay.soldout {
+  background: var(--overlay-soldout-bg);
+  /* Làm mờ ảnh phía sau để tăng tương phản */
+  backdrop-filter: blur(2px) saturate(0.4);
+  -webkit-backdrop-filter: blur(2px) saturate(0.4);
+}
+
+/* Badge chữ "HẾT MÓN" */
+.dish-card__overlay.soldout .overlay-badge {
+  background: var(--overlay-soldout-badge);
+  color: var(--overlay-soldout-text);
+  font-size: var(--text-sm);
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: var(--space-sm) var(--space-lg);
+  border-radius: var(--radius-sm);
+
+  /* Viền nổi bật */
+  border: 2px solid rgba(255, 255, 255, 0.30);
+
+  /* Đổ bóng cho chữ */
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+
+  /* Hiệu ứng xuất hiện */
+  animation: overlayBadgePop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+/* Icon phía trên badge "Hết Món" */
+.dish-card__overlay.soldout .overlay-icon {
+  font-size: 2rem;
+  color: rgba(255, 255, 255, 0.75);
+  animation: overlayIconDrop 0.3s ease both;
+  animation-delay: 0.05s;
+}
+
+/* Dòng chữ phụ bên dưới badge */
+.dish-card__overlay.soldout .overlay-sub {
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.60);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+/* === VARIANT 2: "Ngừng Phục Vụ" - Nền xám === */
+.dish-card__overlay.paused {
+  background: var(--overlay-paused-bg);
+  backdrop-filter: blur(1.5px) saturate(0.3) brightness(0.85);
+  -webkit-backdrop-filter: blur(1.5px) saturate(0.3) brightness(0.85);
+}
+
+.dish-card__overlay.paused .overlay-badge {
+  background: var(--overlay-paused-badge);
+  color: #f7fafc;
+  font-size: var(--text-sm);
+  font-weight: 700;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  padding: var(--space-sm) var(--space-lg);
+  border-radius: var(--radius-sm);
+  border: 2px solid rgba(255, 255, 255, 0.20);
+  animation: overlayBadgePop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+.dish-card__overlay.paused .overlay-icon {
+  font-size: 2rem;
+  color: rgba(255, 255, 255, 0.60);
+  animation: overlayIconDrop 0.3s ease both;
+  animation-delay: 0.05s;
+}
+
+/* === VARIANT 3: Badge góc (không che full ảnh) === */
+.dish-card__badge--soldout {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-15deg);
+  background: rgba(229, 62, 62, 0.92);
+  color: white;
+  font-size: var(--text-sm);
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: var(--space-xs) var(--space-lg);
+  border-radius: var(--radius-xs);
+  border: 3px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 0 4px 16px rgba(229, 62, 62, 0.5);
+  white-space: nowrap;
+  z-index: 11;
+  pointer-events: none;
+  /* Stamp effect */
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.4);
+}
+
+/* === Ảnh bị desaturate khi hết hàng === */
+.dish-card.is-soldout .dish-card__image,
+.dish-card.is-paused .dish-card__image {
+  filter: grayscale(0.6) brightness(0.85);
+  transition: filter var(--transition-base);
+}
+
+/* Card hết hàng không zoom khi hover */
+.dish-card.is-soldout:hover .dish-card__image,
+.dish-card.is-paused:hover .dish-card__image {
+  transform: none;
+  filter: grayscale(0.6) brightness(0.85);
+}
+
+/* Card hết hàng: giảm hiệu ứng hover */
+.dish-card.is-soldout:hover,
+.dish-card.is-paused:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--foodie-border);
+}
+
+/* === Keyframe Animations cho Overlay === */
+@keyframes overlayBadgePop {
+  0% {
+    opacity: 0;
+    transform: scale(0.7);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes overlayIconDrop {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* === Indicator trạng thái nhỏ ở footer card === */
+.dish-status-dot {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.dish-status-dot::before {
+  content: '';
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.dish-status-dot.available {
+  color: var(--foodie-success);
+}
+
+.dish-status-dot.available::before {
+  background: var(--foodie-success);
+  box-shadow: 0 0 0 2px rgba(56, 161, 105, 0.25);
+  /* Hiệu ứng nhấp nháy cho trạng thái "còn hàng" */
+  animation: statusPulse 2s ease-in-out infinite;
+}
+
+.dish-status-dot.soldout {
+  color: var(--foodie-danger);
+}
+
+.dish-status-dot.soldout::before {
+  background: var(--foodie-danger);
+}
+
+.dish-status-dot.paused {
+  color: var(--foodie-text-muted);
+}
+
+.dish-status-dot.paused::before {
+  background: var(--foodie-text-muted);
+}
+
+@keyframes statusPulse {
+  0%, 100% {
+    box-shadow: 0 0 0 2px rgba(56, 161, 105, 0.25);
+  }
+  50% {
+    box-shadow: 0 0 0 5px rgba(56, 161, 105, 0.08);
+  }
+}
+
+
+/* ================================================================
+   PHẦN 8: SKELETON LOADING ANIMATION
+   Hiển thị placeholder trong khi chờ dữ liệu từ API
+   ================================================================ */
+
+/* --- Base Skeleton Element --- */
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--skeleton-base)     0%,
+    var(--skeleton-shimmer)  40%,
+    var(--skeleton-base)     80%
+  );
+  background-size: 400% 100%;
+  border-radius: var(--radius-sm);
+  animation: skeletonShimmer 1.6s ease-in-out infinite;
+
+  /* Không cho chọn text hoặc interact */
+  user-select: none;
+  pointer-events: none;
+}
+
+/* === Shimmer keyframe: sóng chạy từ trái sang phải === */
+@keyframes skeletonShimmer {
+  0% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* --- Skeleton Shapes --- */
+.skeleton-text {
+  height: 1em;
+  border-radius: var(--radius-xs);
+  margin-bottom: var(--space-xs);
+}
+
+.skeleton-text--sm { height: 0.75em; }
+.skeleton-text--lg { height: 1.25em; }
+.skeleton-text--xl { height: 1.5em; }
+
+/* Dòng text cuối thường ngắn hơn (giả lập paragraph) */
+.skeleton-text:last-child {
+  width: 65%;
+}
+
+.skeleton-circle {
+  border-radius: 50%;
+  aspect-ratio: 1 / 1;
+}
+
+.skeleton-rect {
+  border-radius: var(--radius-md);
+}
+
+.skeleton-pill {
+  border-radius: var(--radius-pill);
+}
+
+/* --- Skeleton Card (Clone cấu trúc dish-card) --- */
+.dish-card-skeleton {
+  background-color: var(--foodie-bg-card);
+  border: 1px solid var(--foodie-border-light);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-xs);
+  height: 100%;
+}
+
+/* Vùng ảnh skeleton */
+.dish-card-skeleton__image {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: 0;
+}
+
+/* Body skeleton */
+.dish-card-skeleton__body {
+  padding: var(--space-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+/* Badge nhỏ (giả lập category badge) */
+.dish-card-skeleton__badge {
+  width: 70px;
+  height: 20px;
+}
+
+/* Tiêu đề skeleton */
+.dish-card-skeleton__title {
+  height: 20px;
+  width: 85%;
+}
+
+.dish-card-skeleton__title--line2 {
+  height: 20px;
+  width: 55%;
+}
+
+/* Mô tả skeleton - 3 dòng */
+.dish-card-skeleton__desc {
+  height: 14px;
+  margin-top: var(--space-xs);
+}
+
+.dish-card-skeleton__desc:nth-child(2) { width: 100%; }
+.dish-card-skeleton__desc:nth-child(3) { width: 90%; }
+.dish-card-skeleton__desc:nth-child(4) { width: 70%; }
+
+/* Footer skeleton: giá + nút */
+.dish-card-skeleton__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: var(--space-sm);
+  padding-top: var(--space-sm);
+  border-top: 1px solid var(--foodie-border-light);
+}
+
+.dish-card-skeleton__price {
+  height: 24px;
+  width: 100px;
+}
+
+.dish-card-skeleton__btn {
+  height: 32px;
+  width: 80px;
+  border-radius: var(--radius-sm);
+}
+
+/* --- Skeleton cho Category Filter --- */
+.category-filter-skeleton {
+  display: flex;
+  gap: var(--space-sm);
+  padding: var(--space-md) 0;
+  overflow: hidden;
+}
+
+.category-filter-skeleton__item {
+  height: 36px;
+  border-radius: var(--radius-pill);
+  flex-shrink: 0;
+}
+
+/* Tạo width khác nhau cho tự nhiên hơn */
+.category-filter-skeleton__item:nth-child(1) { width: 80px; }
+.category-filter-skeleton__item:nth-child(2) { width: 110px; }
+.category-filter-skeleton__item:nth-child(3) { width: 90px; }
+.category-filter-skeleton__item:nth-child(4) { width: 120px; }
+.category-filter-skeleton__item:nth-child(5) { width: 70px; }
+.category-filter-skeleton__item:nth-child(6) { width: 100px; }
+
+/* --- Skeleton cho Table (trang Admin) --- */
+.table-skeleton__row {
+  display: flex;
+  gap: var(--space-md);
+  align-items: center;
+  padding: var(--space-sm) 0;
+  border-bottom: 1px solid var(--foodie-border-light);
+}
+
+.table-skeleton__cell {
+  height: 16px;
+  flex: 1;
+}
+
+.table-skeleton__cell--sm { flex: 0 0 60px; }
+.table-skeleton__cell--md { flex: 0 0 120px; }
+.table-skeleton__cell--avatar {
+  flex: 0 0 40px;
+  height: 40px;
+  border-radius: var(--radius-sm);
+}
+
+/* Delay animation để các skeleton không đồng bộ (thật hơn) */
+.dish-card-skeleton:nth-child(2) .skeleton,
+.table-skeleton__row:nth-child(2) .skeleton {
+  animation-delay: 0.15s;
+}
+
+.dish-card-skeleton:nth-child(3) .skeleton,
+.table-skeleton__row:nth-child(3) .skeleton {
+  animation-delay: 0.30s;
+}
+
+.dish-card-skeleton:nth-child(4) .skeleton,
+.table-skeleton__row:nth-child(4) .skeleton {
+  animation-delay: 0.45s;
+}
+
+.dish-card-skeleton:nth-child(5) .skeleton,
+.table-skeleton__row:nth-child(5) .skeleton {
+  animation-delay: 0.60s;
+}
+
+.dish-card-skeleton:nth-child(6) .skeleton,
+.table-skeleton__row:nth-child(6) .skeleton {
+  animation-delay: 0.75s;
+}
+
+
+/* ================================================================
+   PHẦN 9: SPINNER & LOADING STATES
+   ================================================================ */
+
+/* --- Inline Spinner (nhỏ, dùng trong button hoặc nội dung) --- */
+.foodie-spinner {
+  display: inline-block;
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 2.5px solid var(--foodie-border);
+  border-top-color: var(--foodie-primary);
+  border-radius: 50%;
+  animation: spinnerRotate 0.7s linear infinite;
+  flex-shrink: 0;
+}
+
+.foodie-spinner--sm {
+  width: 1rem;
+  height: 1rem;
+  border-width: 2px;
+}
+
+.foodie-spinner--lg {
+  width: 2rem;
+  height: 2rem;
+  border-width: 3px;
+}
+
+.foodie-spinner--xl {
+  width: 3rem;
+  height: 3rem;
+  border-width: 4px;
+}
+
+/* Màu variant */
+.foodie-spinner--white {
+  border-color: rgba(255,255,255,0.3);
+  border-top-color: white;
+}
+
+.foodie-spinner--success {
+  border-color: rgba(56, 161, 105, 0.2);
+  border-top-color: var(--foodie-success);
+}
+
+@keyframes spinnerRotate {
+  to { transform: rotate(360deg); }
+}
+
+/* --- Loading Dots (3 chấm nhảy) --- */
+.loading-dots {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.loading-dots span {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--foodie-primary);
+  animation: dotBounce 1.2s ease-in-out infinite;
+  display: inline-block;
+}
+
+.loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+.loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes dotBounce {
+  0%, 80%, 100% {
+    transform: scale(0.7);
+    opacity: 0.5;
+  }
+  40% {
+    transform: scale(1.1);
+    opacity: 1;
+  }
+}
+
+/* --- Loading Bar (progress bar trên đầu trang) --- */
+.loading-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(
+    90deg,
+    var(--foodie-primary),
+    var(--foodie-accent),
+    var(--foodie-primary)
+  );
+  background-size: 200% 100%;
+  z-index: var(--z-loading);
+  animation: loadingBarMove 1.2s ease-in-out infinite;
+  transform-origin: left;
+}
+
+@keyframes loadingBarMove {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* --- Empty State (không có món ăn nào) --- */
+.empty-state {
+  text-align: center;
+  padding: var(--space-3xl) var(--space-xl);
+  color: var(--foodie-text-muted);
+}
+
+.empty-state__icon {
+  font-size: 4rem;
+  margin-bottom: var(--space-md);
+  opacity: 0.4;
+  display: block;
+  /* Wobble animation */
+  animation: emptyWobble 3s ease-in-out infinite;
+}
+
+.empty-state__title {
+  font-size: var(--text-xl);
+  font-weight: 700;
+  color: var(--foodie-text-secondary);
+  margin-bottom: var(--space-sm);
+}
+
+.empty-state__desc {
+  font-size: var(--text-base);
+  max-width: 380px;
+  margin: 0 auto var(--space-lg);
+}
+
+@keyframes emptyWobble {
+  0%, 100% { transform: rotate(-3deg); }
+  50% { transform: rotate(3deg); }
+}
+
+/* --- Error State --- */
+.error-state {
+  text-align: center;
+  padding: var(--space-2xl);
+  background: rgba(229, 62, 62, 0.05);
+  border: 1px dashed rgba(229, 62, 62, 0.3);
+  border-radius: var(--radius-lg);
+}
+
+.error-state__icon {
+  font-size: 3rem;
+  color: var(--foodie-danger);
+  margin-bottom: var(--space-md);
+}
+
+
+/* ================================================================
+   PHẦN 10: CATEGORY FILTER BAR
+   ================================================================ */
+
+.category-filter {
+  background: var(--foodie-bg-card);
+  border-bottom: 1px solid var(--foodie-border);
+  padding: var(--space-md) 0;
+  position: sticky;
+  top: 64px; /* Chiều cao navbar */
+  z-index: var(--z-dropdown);
+  box-shadow: var(--shadow-xs);
+}
+
+/* Scroll ngang trên mobile */
+.category-filter__list {
+  display: flex;
+  gap: var(--space-sm);
+  overflow-x: auto;
+  padding-bottom: 4px; /* Space cho scrollbar */
+  /* Ẩn scrollbar nhưng vẫn scroll được */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.category-filter__list::-webkit-scrollbar {
+  display: none;
+}
+
+/* Nút filter từng danh mục */
+.category-filter__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-xs) var(--space-md);
+  border-radius: var(--radius-pill);
+  border: 1.5px solid var(--foodie-border);
+  background: transparent;
+  color: var(--foodie-text-secondary);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    color            var(--transition-fast),
+    background-color var(--transition-fast),
+    border-color     var(--transition-fast),
+    box-shadow       var(--transition-fast),
+    transform        var(--transition-fast);
+  flex-shrink: 0;
+}
+
+.category-filter__btn:hover {
+  color: var(--foodie-primary);
+  border-color: var(--foodie-primary);
+  background: var(--foodie-primary-muted);
+  transform: translateY(-1px);
+}
+
+.category-filter__btn.active {
+  background: var(--foodie-primary);
+  border-color: var(--foodie-primary);
+  color: white;
+  box-shadow: 0 4px 12px rgba(255, 107, 53, 0.30);
+  font-weight: 600;
+}
+
+.category-filter__btn.active:hover {
+  background: var(--foodie-primary-dark);
+  border-color: var(--foodie-primary-dark);
+}
+
+/* Số lượng món trong danh mục */
+.category-filter__count {
+  background: rgba(255, 255, 255, 0.30);
+  color: inherit;
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: var(--radius-pill);
+  line-height: 1.4;
+}
+
+.category-filter__btn:not(.active) .category-filter__count {
+  background: var(--foodie-bg-section);
+  color: var(--foodie-text-muted);
+}
+
+
+/* ================================================================
+   PHẦN 11: FORM & MODAL STYLES
+   ================================================================ */
+
+/* --- Form Groups --- */
+.form-label {
+  font-weight: 600;
+  font-size: var(--text-sm);
+  color: var(--foodie-text-secondary);
+  margin-bottom: var(--space-xs);
+}
+
+.form-label .required-mark {
+  color: var(--foodie-danger);
+  margin-left: 3px;
+}
+
+/* Custom input style */
+.form-control,
+.form-select {
+  border: 1.5px solid var(--foodie-border);
+  border-radius: var(--radius-sm);
+  padding: 0.5rem var(--space-sm);
+  font-size: var(--text-sm);
+  color: var(--foodie-text-primary);
+  background-color: var(--foodie-bg-card);
+  transition:
+    border-color var(--transition-fast),
+    box-shadow   var(--transition-fast);
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--foodie-primary);
+  box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.15);
+  background-color: var(--foodie-bg-card);
+  outline: none;
+}
+
+.form-control.is-invalid {
+  border-color: var(--foodie-danger);
+}
+
+.form-control.is-invalid:focus {
+  box-shadow: 0 0 0 3px rgba(229, 62, 62, 0.15);
+}
+
+.form-control.is-valid {
+  border-color: var(--foodie-success);
+}
+
+/* Input giá tiền - có ký hiệu VND */
+.input-price-wrap {
+  position: relative;
+}
+
+.input-price-wrap .form-control {
+  padding-right: 2.5rem;
+}
+
+.input-price-wrap::after {
+  content: '₫';
+  position: absolute;
+  right: var(--space-sm);
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--foodie-text-muted);
+  font-weight: 600;
+  pointer-events: none;
+}
+
+/* Input preview ảnh */
+.image-preview {
+  width: 100%;
+  aspect-ratio: 4/3;
+  border: 2px dashed var(--foodie-border);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: var(--foodie-bg-section);
+  transition: border-color var(--transition-fast);
+}
+
+.image-preview:hover {
+  border-color: var(--foodie-primary);
+}
+
+.image-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.image-preview__placeholder {
+  text-align: center;
+  color: var(--foodie-text-muted);
+  font-size: var(--text-sm);
+}
+
+.image-preview__placeholder i {
+  font-size: 2rem;
+  margin-bottom: var(--space-xs);
+  display: block;
+}
+
+/* --- Modal Custom --- */
+.foodie-modal .modal-content {
+  border: none;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xl);
+  overflow: hidden;
+}
+
+.foodie-modal .modal-header {
+  background: linear-gradient(
+    135deg,
+    var(--foodie-primary) 0%,
+    var(--foodie-primary-dark) 100%
+  );
+  color: white;
+  border-bottom: none;
+  padding: var(--space-md) var(--space-lg);
+}
+
+.foodie-modal .modal-title {
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.foodie-modal .btn-close {
+  filter: brightness(0) invert(1);
+  opacity: 0.8;
+}
+
+.foodie-modal .btn-close:hover {
+  opacity: 1;
+}
+
+.foodie-modal .modal-footer {
+  border-top: 1px solid var(--foodie-border-light);
+  padding: var(--space-md) var(--space-lg);
+  gap: var(--space-sm);
+}
+
+/* Modal xóa - màu đỏ nguy hiểm */
+.foodie-modal--danger .modal-header {
+  background: linear-gradient(
+    135deg,
+    var(--foodie-danger) 0%,
+    #c53030 100%
+  );
+}
+
+
+/* ================================================================
+   PHẦN 12: TOAST & ALERT CUSTOM
+   ================================================================ */
+
+/* Toast container đã style ở utils.js, bổ sung thêm animation */
+#foodie-toast-container .toast {
+  animation: toastSlideIn 0.3s ease both;
+  min-width: 280px;
+  max-width: 360px;
+}
+
+#foodie-toast-container .toast.hiding {
+  animation: toastSlideOut 0.25s ease both;
+}
+
+@keyframes toastSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes toastSlideOut {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+    max-height: 200px;
+    margin-bottom: var(--space-sm);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(100%);
+    max-height: 0;
+    margin-bottom: 0;
+  }
+}
+
+/* Alert container custom */
+.alert-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+/* Custom alert animation */
+.alert {
+  animation: alertFadeIn 0.25s ease both;
+  border-radius: var(--radius-md) !important;
+  font-size: var(--text-sm);
+}
+
+@keyframes alertFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+/* ================================================================
+   PHẦN 13: FOOTER
+   ================================================================ */
+
+.foodie-footer {
+  background: var(--foodie-secondary);
+  color: rgba(255, 255, 255, 0.75);
+  padding: var(--space-2xl) 0 var(--space-md);
+  margin-top: auto;
+}
+
+.foodie-footer h5,
+.foodie-footer h6 {
+  color: white;
+  font-weight: 700;
+  margin-bottom: var(--space-md);
+}
+
+.foodie-footer a {
+  color: rgba(255, 255, 255, 0.65);
+  font-size: var(--text-sm);
+  transition: color var(--transition-fast);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  margin-bottom: var(--space-xs);
+}
+
+.foodie-footer a:hover {
+  color: var(--foodie-accent);
+}
+
+.foodie-footer .footer-divider {
+  border-color: rgba(255, 255, 255, 0.1);
+  margin: var(--space-xl) 0 var(--space-md);
+}
+
+.foodie-footer .footer-bottom {
+  font-size: var(--text-xs);
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.foodie-footer .brand-name {
+  color: var(--foodie-primary);
+  font-weight: 700;
+}
+
+
+/* ================================================================
+   PHẦN 14: UTILITY CLASSES (BỔ SUNG BOOTSTRAP)
+   ================================================================ */
+
+/* Background brands */
+.bg-foodie-primary { background-color: var(--foodie-primary) !important; }
+.bg-foodie-secondary { background-color: var(--foodie-secondary) !important; }
+.bg-foodie-accent { background-color: var(--foodie-accent) !important; }
+.bg-foodie-muted { background-color: var(--foodie-primary-muted) !important; }
+.bg-foodie-section { background-color: var(--foodie-bg-section) !important; }
+
+/* Border brands */
+.border-foodie { border-color: var(--foodie-border) !important; }
+.border-foodie-primary { border-color: var(--foodie-primary) !important; }
+
+/* Shadows */
+.shadow-foodie-sm { box-shadow: var(--shadow-sm) !important; }
+.shadow-foodie-md { box-shadow: var(--shadow-md) !important; }
+.shadow-foodie-lg { box-shadow: var(--shadow-lg) !important; }
+
+/* Border radius custom */
+.rounded-foodie { border-radius: var(--radius-md) !important; }
+.rounded-foodie-lg { border-radius: var(--radius-lg) !important; }
+.rounded-foodie-xl { border-radius: var(--radius-xl) !important; }
+
+/* Overflow */
+.overflow-x-auto { overflow-x: auto !important; }
+.overflow-y-hidden { overflow-y: hidden !important; }
+
+/* Aspect ratio */
+.aspect-square { aspect-ratio: 1 / 1; }
+.aspect-video { aspect-ratio: 16 / 9; }
+.aspect-photo { aspect-ratio: 4 / 3; }
+
+/* Transitions */
+.transition-base { transition: all var(--transition-base); }
+.transition-fast { transition: all var(--transition-fast); }
+
+/* Hover lift effect (dùng cho bất kỳ element nào) */
+.hover-lift {
+  transition: transform var(--transition-card), box-shadow var(--transition-card);
+}
+.hover-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+}
+
+/* Cursor */
+.cursor-pointer { cursor: pointer !important; }
+.cursor-default { cursor: default !important; }
+
+/* Text clamp */
+.line-clamp-1 {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Grid helpers (bổ sung Bootstrap grid) */
+.grid-auto-fill {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: var(--space-lg);
+}
+
+.grid-auto-fill--sm {
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+}
+
+.grid-auto-fill--lg {
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+}
+
+/* Divider ngang đẹp */
+.section-divider {
+  width: 60px;
+  height: 4px;
+  background: linear-gradient(90deg, var(--foodie-primary), var(--foodie-accent));
+  border-radius: var(--radius-pill);
+  margin: var(--space-sm) auto var(--space-lg);
+}
+
+.section-divider--left {
+  margin-left: 0;
+}
+
+/* Button custom brand */
+.btn-foodie {
+  background: linear-gradient(
+    135deg,
+    var(--foodie-primary) 0%,
+    var(--foodie-primary-dark) 100%
+  );
+  color: white;
+  border: none;
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  padding: 0.5rem var(--space-lg);
+  transition:
+    opacity      var(--transition-fast),
+    transform    var(--transition-fast),
+    box-shadow   var(--transition-fast);
+}
+
+.btn-foodie:hover {
+  color: white;
+  opacity: 0.92;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 107, 53, 0.38);
+}
+
+.btn-foodie:active {
+  transform: translateY(0);
+}
+
+/* Scroll to top button */
+.scroll-top-btn {
+  position: fixed;
+  bottom: var(--space-lg);
+  right: var(--space-lg);
+  width: 44px;
+  height: 44px;
+  background: var(--foodie-primary);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  box-shadow: var(--shadow-md);
+  cursor: pointer;
+  z-index: var(--z-fixed);
+  opacity: 0;
+  transform: translateY(16px);
+  transition:
+    opacity    var(--transition-base),
+    transform  var(--transition-base),
+    background var(--transition-fast);
+  pointer-events: none;
+}
+
+.scroll-top-btn.visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.scroll-top-btn:hover {
+  background: var(--foodie-primary-dark);
+}
+
+
+/* ================================================================
+   PHẦN 15: RESPONSIVE - MOBILE (<576px)
+   Tối ưu trải nghiệm trên màn hình nhỏ
+   ================================================================ */
+
+@media screen and (max-width: 575.98px) {
+
+  /* --- Base adjustments --- */
+  html { font-size: 15px; } /* Giảm font-size gốc nhẹ */
+
+  body {
+    /* Tránh layout shift khi bàn phím ảo xuất hiện */
+    min-height: 100dvh;
+  }
+
+  /* --- Navbar mobile --- */
+  .foodie-navbar {
+    padding: var(--space-xs) 0;
+  }
+
+  .foodie-navbar .navbar-brand {
+    font-size: var(--text-lg);
+  }
+
+  /* Hamburger menu rộng hơn để dễ bấm */
+  .foodie-navbar .navbar-toggler {
+    padding: 6px 10px;
+    border: 1.5px solid var(--foodie-border);
+  }
+
+  /* Nav dropdown mobile */
+  .foodie-navbar .navbar-collapse {
+    background: var(--foodie-bg-card);
+    border-top: 1px solid var(--foodie-border-light);
+    margin-top: var(--space-xs);
+    padding: var(--space-sm) var(--space-md);
+    border-radius: 0 0 var(--radius-md) var(--radius-md);
+    box-shadow: var(--shadow-md);
+  }
+
+  .foodie-navbar .nav-link {
+    padding: var(--space-sm) var(--space-md) !important;
+    border-radius: var(--radius-sm);
+    border-bottom: 1px solid var(--foodie-border-light);
+  }
+
+  .foodie-navbar .nav-link:last-child {
+    border-bottom: none;
+  }
+
+  /* --- Dish Cards: 1 cột --- */
+  .dish-card {
+    /* Vô hiệu hóa hover trên mobile (dùng touch thay) */
+    transition: transform 0.1s ease, box-shadow 0.1s ease;
+  }
+
+  /* Giảm hiệu ứng hover trên touch device */
+  .dish-card:hover {
+    transform: none;
+    box-shadow: var(--shadow-sm);
+    border-color: var(--foodie-border-light);
+  }
+
+  /* Chỉ áp dụng active state khi touch */
+  .dish-card:active {
+    transform: scale(0.98);
+    box-shadow: var(--shadow-xs);
+  }
+
+  .dish-card__image-wrap {
+    /* Ảnh cao hơn 1 chút trên mobile */
+    aspect-ratio: 16 / 9;
+  }
+
+  .dish-card__body {
+    padding: var(--space-sm) var(--space-md);
+  }
+
+  .dish-card__name {
+    font-size: var(--text-base);
+  }
+
+  .dish-card__price {
+    font-size: var(--text-base);
+  }
+
+  /* Ẩn mô tả để tiết kiệm space */
+  .dish-card__desc {
+    display: none;
+  }
+
+  /* Nút nhỏ hơn trên mobile */
+  .dish-card__btn {
+    padding: 0.3rem var(--space-sm);
+    font-size: 0.75rem;
+  }
+
+  /* --- Category Filter mobile: scroll ngang --- */
+  .category-filter {
+    top: 56px; /* Navbar nhỏ hơn */
+    padding: var(--space-sm) 0;
+  }
+
+  .category-filter__list {
+    padding: 0 var(--space-md) 4px;
+  }
+
+  .category-filter__btn {
+    padding: 6px var(--space-sm);
+    font-size: 0.75rem;
+  }
+
+  /* --- Grid: 1 cột trên mobile --- */
+  .grid-auto-fill,
+  .grid-auto-fill--sm,
+  .grid-auto-fill--lg {
+    grid-template-columns: 1fr;
+    gap: var(--space-md);
+  }
+
+  /* --- Hero mobile --- */
+  .foodie-hero {
+    padding: var(--space-2xl) 0;
+    text-align: center;
+  }
+
+  .foodie-hero h1 {
+    font-size: clamp(1.75rem, 8vw, 2.5rem);
+  }
+
+  /* --- Modal: chiếm toàn màn hình --- */
+  .foodie-modal .modal-dialog {
+    margin: 0;
+    max-width: 100%;
+    height: 100%;
+    align-items: flex-end;
+  }
+
+  .foodie-modal .modal-content {
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    max-height: 92dvh;
+    overflow-y: auto;
+  }
+
+  /* --- Typography scale down --- */
+  .foodie-heading--lg {
+    font-size: clamp(1.5rem, 7vw, 2rem);
+  }
+
+  /* --- Scroll to top button --- */
+  .scroll-top-btn {
+    bottom: var(--space-md);
+    right: var(--space-md);
+    width: 40px;
+    height: 40px;
+    font-size: 1rem;
+  }
+
+  /* --- Table: ẩn bớt cột --- */
+  .table-responsive-mobile .col-hide-mobile {
+    display: none;
+  }
+
+  /* --- Section spacing nhỏ hơn --- */
+  .section-spacing {
+    padding: var(--space-xl) 0;
+  }
+
+  /* --- Empty state nhỏ hơn --- */
+  .empty-state {
+    padding: var(--space-2xl) var(--space-md);
+  }
+
+  .empty-state__icon { font-size: 3rem; }
+}
+
+
+/* ================================================================
+   PHẦN 16: RESPONSIVE - TABLET (>=768px)
+   ================================================================ */
+
+@media screen and (min-width: 768px) {
+
+  /* --- Dish Cards: hiệu ứng hover đầy đủ --- */
+  .dish-card:hover {
+    transform: translateY(-6px) scale(1.015);
+    box-shadow: var(--shadow-card-hover);
+  }
+
+  .dish-card:hover .dish-card__image {
+    transform: scale(1.08);
+  }
+
+  /* --- Grid: 2 cột --- */
+  .grid-auto-fill {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .grid-auto-fill--sm {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* --- Card horizontal visible --- */
+  .dish-card--horizontal {
+    flex-direction: row;
+  }
+
+  /* --- Dish description hiển thị --- */
+  .dish-card__desc {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* --- Category filter có thể wrap --- */
+  .category-filter__list {
+    flex-wrap: nowrap; /* Vẫn scroll ngang */
+    justify-content: flex-start;
+  }
+
+  /* --- Modal mặc định --- */
+  .foodie-modal .modal-dialog {
+    max-width: 600px;
+    margin: 1.75rem auto;
+    height: auto;
+    align-items: center;
+  }
+
+  .foodie-modal .modal-content {
+    border-radius: var(--radius-lg);
+    max-height: none;
+  }
+
+  /* --- Section spacing --- */
+  .section-spacing {
+    padding: var(--space-2xl) 0;
+  }
+
+  /* --- Image preview lớn hơn --- */
+  .image-preview {
+    aspect-ratio: 16 / 9;
+  }
+
+  /* --- Navbar full --- */
+  .foodie-navbar .navbar-brand {
+    font-size: var(--text-xl);
+  }
+}
+
+
+/* ================================================================
+   PHẦN 17: RESPONSIVE - DESKTOP (>=992px)
+   ================================================================ */
+
+@media screen and (min-width: 992px) {
+
+  /* --- Grid: 3 cột --- */
+  .grid-auto-fill {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .grid-auto-fill--sm {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .grid-auto-fill--lg {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* --- Dish description: 3 dòng --- */
+  .dish-card__desc {
+    -webkit-line-clamp: 3;
+  }
+
+  /* --- Category filter: căn giữa nếu ít item --- */
+  .category-filter__list {
+    justify-content: flex-start;
+  }
+
+  /* --- Hero lớn hơn --- */
+  .foodie-hero {
+    padding: var(--space-3xl) 0;
+    min-height: 420px;
+    display: flex;
+    align-items: center;
+  }
+
+  /* --- Sticky sidebar (nếu có layout 2 cột) --- */
+  .sidebar-sticky {
+    position: sticky;
+    top: calc(64px + var(--space-md)); /* Navbar height + gap */
+    max-height: calc(100vh - 80px);
+    overflow-y: auto;
+    scrollbar-width: thin;
+  }
+
+  /* --- Card hover: hiệu ứng mạnh hơn --- */
+  .dish-card:hover {
+    transform: translateY(-8px) scale(1.02);
+  }
+
+  /* --- Modal lớn hơn --- */
+  .foodie-modal .modal-lg .modal-dialog {
+    max-width: 800px;
+  }
+
+  /* --- Section spacing --- */
+  .section-spacing {
+    padding: var(--space-3xl) 0;
+  }
+
+  /* --- Table không cần ẩn cột --- */
+  .table-responsive-mobile .col-hide-mobile {
+    display: table-cell;
+  }
+}
+
+
+/* ================================================================
+   PHẦN 18: RESPONSIVE - LARGE DESKTOP (>=1200px)
+   ================================================================ */
+
+@media screen and (min-width: 1200px) {
+
+  /* --- Grid: 4 cột --- */
+  .grid-auto-fill {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .grid-auto-fill--sm {
+    grid-template-columns: repeat(5, 1fr);
+  }
+
+  /* --- Container max-width (nếu không dùng Bootstrap container) --- */
+  .foodie-container {
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 0 var(--space-xl);
+  }
+
+  /* --- Category filter: có thể wrap ở màn lớn --- */
+  .category-filter__list {
+    flex-wrap: wrap;
+    overflow-x: visible;
+  }
+}
+
+
+/* ================================================================
+   PHẦN 19: PRINT STYLES
+   Tối ưu khi in thực đơn ra giấy
+   ================================================================ */
+
+@media print {
+
+  /* Ẩn các phần không cần in */
+  .foodie-navbar,
+  .category-filter,
+  .dish-card__actions,
+  .foodie-footer,
+  .scroll-top-btn,
+  #foodie-loading-overlay,
+  #foodie-toast-container,
+  .btn,
+  button:not(.print-visible) {
+    display: none !important;
+  }
+
+  body {
+    background: white;
+    color: black;
+    font-size: 12pt;
+  }
+
+  /* Card: không có shadow, không có hover */
+  .dish-card {
+    break-inside: avoid; /* Không bị ngắt trang ở giữa card */
+    box-shadow: none;
+    border: 1px solid #ccc;
+    transition: none;
+  }
+
+  .dish-card:hover {
+    transform: none;
+    box-shadow: none;
+  }
+
+  /* Hiển thị URL links */
+  a[href]::after {
+    content: " (" attr(href) ")";
+    font-size: 10pt;
+    color: #666;
+  }
+
+  /* Grid: 2 cột khi in */
+  .grid-auto-fill {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5cm;
+  }
+
+  /* Giá tiền nổi bật hơn khi in */
+  .dish-card__price {
+    color: black;
+    font-size: 14pt;
+  }
+
+  /* Ẩn overlay khi in */
+  .dish-card__overlay {
+    display: none;
+  }
+
+  /* Page break helpers */
+  .print-page-break { page-break-after: always; }
+  .print-no-break { break-inside: avoid; }
+}
+
+
+/* ================================================================
+   PHẦN 20: ACCESSIBILITY & REDUCED MOTION
+   Đảm bảo trải nghiệm tốt cho người dùng có nhu cầu đặc biệt
+   ================================================================ */
+
+/**
+ * Khi user bật "Reduce Motion" trong OS settings
+ * (macOS: System Preferences > Accessibility > Reduce Motion)
+ * → Tắt hoặc giảm thiểu tất cả animation/transition
+ */
+@media (prefers-reduced-motion: reduce) {
+
+  /* Tắt tất cả animation */
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  /* Skeleton không shimmer */
+  .skeleton {
+    animation: none;
+    background: var(--skeleton-base);
+  }
+
+  /* Spinner không quay (thay bằng pulse nhẹ) */
+  .foodie-spinner {
+    animation: none;
+    opacity: 0.6;
+  }
+
+  /* Loading dots không nhảy */
+  .loading-dots span {
+    animation: none;
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  /* Status dot không nhấp nháy */
+  .dish-status-dot.available::before {
+    animation: none;
+  }
+
+  /* Card không hover effect mạnh */
+  .dish-card:hover {
+    transform: none;
+  }
+
+  .dish-card:hover .dish-card__image {
+    transform: none;
+  }
+
+  /* Empty state icon không wobble */
+  .empty-state__icon {
+    animation: none;
+  }
+}
+
+/**
+ * High Contrast Mode (Windows)
+ * Tăng tương phản cho người khiếm thị
+ */
+@media (forced-colors: active) {
+
+  .dish-card {
+    border: 2px solid ButtonText;
+  }
+
+  .dish-card__overlay {
+    border: 2px solid ButtonText;
+  }
+
+  .category-filter__btn.active {
+    forced-color-adjust: none;
+    background: Highlight;
+    color: HighlightText;
+    border-color: Highlight;
+  }
+
+  .skeleton {
+    background: ButtonFace;
+    border: 1px solid ButtonText;
+    animation: none;
+  }
+}
+
+/**
+ * Dark Mode (nếu hệ thống bật dark mode)
+ * Tự động điều chỉnh màu sắc
+ */
+@media (prefers-color-scheme: dark) {
+
+  :root {
+    --foodie-bg:           #1a1a2e;
+    --foodie-bg-card:      #16213e;
+    --foodie-bg-section:   #0f3460;
+    --foodie-border:       #2d3748;
+    --foodie-border-light: #2a3547;
+
+    --foodie-text-primary:   #f7fafc;
+    --foodie-text-secondary: #cbd5e0;
+    --foodie-text-muted:     #718096;
+
+    --skeleton-base:    #2d3748;
+    --skeleton-shimmer: #3a4a5c;
+    --skeleton-dark:    #252f3e;
+  }
+
+  .foodie-navbar {
+    background-color: rgba(22, 33, 62, 0.95);
+    border-color: var(--foodie-border);
+  }
+
+  .dish-card {
+    background-color: var(--foodie-bg-card);
+    border-color: var(--foodie-border);
+  }
+
+  .form-control,
+  .form-select {
+    background-color: var(--foodie-bg-card);
+    color: var(--foodie-text-primary);
+    border-color: var(--foodie-border);
+  }
+
+  .form-control:focus,
+  .form-select:focus {
+    background-color: var(--foodie-bg-card);
+  }
+}
